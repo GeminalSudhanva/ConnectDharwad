@@ -2,51 +2,35 @@
 
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, AnimatePresence, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
 import {
-  Menu, X, ChevronDown, ArrowRight, Sparkles, GraduationCap, Briefcase, Lightbulb,
+  ArrowRight, Sparkles, GraduationCap, Briefcase, Lightbulb,
   Users, Target, Rocket, Award, HeartHandshake, Building2, Star, MapPin, Phone,
-  Mail, Linkedin, Facebook, Instagram, Twitter, Quote, CheckCircle2, TrendingUp,
+  Linkedin, Quote, CheckCircle2, TrendingUp, Mail,
 } from 'lucide-react';
-import { toast } from 'sonner';
+import Navbar from '@/components/site/Navbar';
+import Footer from '@/components/site/Footer';
 
 /* ---------------- Data ---------------- */
 
-const NAV_ITEMS = [
-  { label: 'Home', href: '#home' },
-  { label: 'About', href: '#about' },
-  {
-    label: 'Services',
-    href: '#services',
-    children: [
-      { label: 'Corporate Training', href: '#services' },
-      { label: 'Recruitment', href: '#services' },
-      { label: 'Consultancy', href: '#services' },
-    ],
-  },
-  { label: 'Events', href: '#events' },
-  { label: 'Gallery', href: '#gallery' },
-  { label: 'Testimonials', href: '#testimonials' },
-  { label: 'Contact', href: '#contact' },
-];
-
 const SERVICES = [
   {
-    icon: GraduationCap,
+    icon: GraduationCap, href: '/services/corporate-training',
     title: 'Corporate Training',
     desc: 'Industry-oriented programs in technical skills, soft skills, leadership, and campus-to-corporate transitions.',
     features: ['Technical Training', 'Soft Skills', 'Leadership', 'Communication'],
     color: 'from-[#8CC63F] to-[#6EA82F]',
   },
   {
-    icon: Briefcase,
+    icon: Briefcase, href: '/services/recruitment',
     title: 'Recruitment',
     desc: 'End-to-end talent acquisition connecting the right candidates with leading organizations across industries.',
     features: ['Talent Sourcing', 'Screening', 'Placements', 'Employer Branding'],
     color: 'from-[#83B9E6] to-[#5C9CD3]',
   },
   {
-    icon: Lightbulb,
+    icon: Lightbulb, href: '/services/consultancy',
     title: 'Consultancy',
     desc: 'Strategic business, career, and skill-development consulting tailored to your organizational objectives.',
     features: ['Business Consultancy', 'Career Guidance', 'Corporate Advisory', 'Skill Dev.'],
@@ -72,40 +56,13 @@ const WHY_US = [
 ];
 
 const TESTIMONIALS = [
-  {
-    name: 'Priya Kulkarni',
-    role: 'HR Head, TechNova Solutions',
-    quote: 'Connect Dharwad transformed our onboarding pipeline. Their trainers deliver corporate-ready talent that hits the ground running.',
-    rating: 5,
-    initials: 'PK',
-  },
-  {
-    name: 'Rohan Deshpande',
-    role: 'Software Engineer, Infosys',
-    quote: 'The campus-to-corporate program gave me the confidence and skills that made all the difference in my career trajectory.',
-    rating: 5,
-    initials: 'RD',
-  },
-  {
-    name: 'Anitha Rao',
-    role: 'Director, Karnataka MSME Council',
-    quote: 'Professional, insightful, and results-driven. Their consultancy reshaped how we approach workforce development.',
-    rating: 5,
-    initials: 'AR',
-  },
-  {
-    name: 'Vikram Patil',
-    role: 'Talent Acquisition, Wipro',
-    quote: 'Their recruitment team consistently delivers pre-vetted candidates matched to our exact requirements. Truly a strategic partner.',
-    rating: 5,
-    initials: 'VP',
-  },
+  { name: 'Priya Kulkarni', role: 'HR Head, TechNova Solutions', quote: 'Connect Dharwad transformed our onboarding pipeline. Their trainers deliver corporate-ready talent that hits the ground running.', rating: 5, initials: 'PK' },
+  { name: 'Rohan Deshpande', role: 'Software Engineer, Infosys', quote: 'The campus-to-corporate program gave me the confidence and skills that made all the difference in my career trajectory.', rating: 5, initials: 'RD' },
+  { name: 'Anitha Rao', role: 'Director, Karnataka MSME Council', quote: 'Professional, insightful, and results-driven. Their consultancy reshaped how we approach workforce development.', rating: 5, initials: 'AR' },
+  { name: 'Vikram Patil', role: 'Talent Acquisition, Wipro', quote: 'Their recruitment team consistently delivers pre-vetted candidates matched to our exact requirements. Truly a strategic partner.', rating: 5, initials: 'VP' },
 ];
 
-const CLIENTS = [
-  'Infosys', 'Wipro', 'TCS', 'Accenture', 'Cognizant', 'HCL', 'Tech Mahindra', 'Capgemini',
-  'Deloitte', 'IBM', 'Mindtree', 'Mphasis',
-];
+const CLIENTS = ['Infosys', 'Wipro', 'TCS', 'Accenture', 'Cognizant', 'HCL', 'Tech Mahindra', 'Capgemini', 'Deloitte', 'IBM', 'Mindtree', 'Mphasis'];
 
 const TRAINERS = [
   { name: 'Dr. Suresh Hegde', role: 'Lead Corporate Trainer', exp: '18+ yrs', avatar: 'SH' },
@@ -114,16 +71,19 @@ const TRAINERS = [
   { name: 'Kavya Shetty', role: 'Leadership Coach', exp: '10+ yrs', avatar: 'KS' },
 ];
 
-/* ---------------- Utilities ---------------- */
+const EVENTS = [
+  { title: 'AI for Business Leaders', date: 'Jul 15, 2025', loc: 'Dharwad' },
+  { title: 'Campus to Corporate Bootcamp', date: 'Aug 5, 2025', loc: 'Hubli' },
+  { title: 'Leadership Excellence Summit', date: 'Sep 20, 2025', loc: 'Bengaluru' },
+];
 
-function useSmoothLink() {
-  return (e, href) => {
-    if (!href?.startsWith('#')) return;
-    e.preventDefault();
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-}
+const ANNOUNCEMENTS = [
+  { title: 'New Batch Starting: Full-Stack Bootcamp', date: 'Jun 30, 2025', desc: 'Enrollments open for our flagship 12-week program.' },
+  { title: 'Partnership with Infosys Announced', date: 'Jun 18, 2025', desc: 'Strategic tie-up for placements and internships.' },
+  { title: 'Career Fair 2025 \u2014 Registrations Open', date: 'Jun 10, 2025', desc: '50+ companies, 500+ opportunities. Register now.' },
+];
+
+/* ---------------- Utilities ---------------- */
 
 function Counter({ to, suffix = '', duration = 2 }) {
   const ref = useRef(null);
@@ -142,166 +102,9 @@ function Counter({ to, suffix = '', duration = 2 }) {
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
-/* ---------------- Sub-components ---------------- */
-
-function Logo({ dark = false }) {
-  return (
-    <a href="#home" className="flex items-center gap-2.5 group">
-      <div className="relative">
-        <div className="w-10 h-10 rounded-xl brand-gradient flex items-center justify-center shadow-lg shadow-[#8CC63F]/20 group-hover:scale-105 transition-transform">
-          <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M4 12 L10 18 L20 6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
-      </div>
-      <div className="leading-tight">
-        <div className={`font-display font-bold text-[15px] tracking-tight ${dark ? 'text-white' : 'text-[#231F20]'}`}>
-          CONNECT
-        </div>
-        <div className="text-[10px] font-semibold tracking-[0.24em] text-[#8CC63F] -mt-0.5">DHARWAD</div>
-      </div>
-    </a>
-  );
-}
-
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [servicesOpen, setServicesOpen] = useState(false);
-  const smooth = useSmoothLink();
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    onScroll();
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'py-2.5 bg-white/80 backdrop-blur-xl border-b border-black/5 shadow-[0_4px_30px_rgba(0,0,0,0.04)]'
-          : 'py-4 bg-transparent'
-      }`}
-    >
-      <div className="container flex items-center justify-between">
-        <Logo />
-
-        <nav className="hidden lg:flex items-center gap-1">
-          {NAV_ITEMS.map((item) =>
-            item.children ? (
-              <div
-                key={item.label}
-                className="relative"
-                onMouseEnter={() => setServicesOpen(true)}
-                onMouseLeave={() => setServicesOpen(false)}
-              >
-                <button className="px-4 py-2 text-sm font-medium text-[#231F20]/80 hover:text-[#231F20] transition flex items-center gap-1 rounded-full hover:bg-black/5">
-                  {item.label}
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${servicesOpen ? 'rotate-180' : ''}`} />
-                </button>
-                <AnimatePresence>
-                  {servicesOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 8 }}
-                      transition={{ duration: 0.18 }}
-                      className="absolute top-full left-1/2 -translate-x-1/2 pt-3"
-                    >
-                      <div className="w-60 rounded-2xl bg-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] border border-black/5 overflow-hidden">
-                        {item.children.map((c) => (
-                          <a
-                            key={c.label}
-                            href={c.href}
-                            onClick={(e) => smooth(e, c.href)}
-                            className="flex items-center justify-between px-5 py-3 text-sm text-[#231F20]/80 hover:text-white hover:bg-[#231F20] transition-colors"
-                          >
-                            {c.label}
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </a>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ) : (
-              <a
-                key={item.label}
-                href={item.href}
-                onClick={(e) => smooth(e, item.href)}
-                className="px-4 py-2 text-sm font-medium text-[#231F20]/80 hover:text-[#231F20] transition rounded-full hover:bg-black/5"
-              >
-                {item.label}
-              </a>
-            )
-          )}
-        </nav>
-
-        <div className="hidden lg:flex items-center gap-2">
-          <button
-            onClick={() => toast.info('Admin login coming in Phase 2')}
-            className="px-4 py-2 text-sm font-medium text-[#231F20]/70 hover:text-[#231F20] rounded-full"
-          >
-            Login
-          </button>
-          <a
-            href="#contact"
-            onClick={(e) => smooth(e, '#contact')}
-            className="group relative inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#8CC63F] text-white text-sm font-semibold shadow-lg shadow-[#8CC63F]/25 hover:bg-[#231F20] transition-colors"
-          >
-            Get in Touch
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-          </a>
-        </div>
-
-        <button
-          onClick={() => setOpen((v) => !v)}
-          className="lg:hidden p-2 rounded-xl hover:bg-black/5"
-          aria-label="Menu"
-        >
-          {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
-      </div>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden overflow-hidden bg-white border-t border-black/5"
-          >
-            <div className="container py-4 flex flex-col">
-              {NAV_ITEMS.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  onClick={(e) => { smooth(e, item.href); setOpen(false); }}
-                  className="py-3 text-[15px] font-medium text-[#231F20]/85 border-b border-black/5 last:border-0"
-                >
-                  {item.label}
-                </a>
-              ))}
-              <a
-                href="#contact"
-                onClick={(e) => { smooth(e, '#contact'); setOpen(false); }}
-                className="mt-4 inline-flex items-center justify-center gap-1.5 px-5 py-3 rounded-full bg-[#8CC63F] text-white text-sm font-semibold"
-              >
-                Get in Touch <ArrowRight className="w-4 h-4" />
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
-  );
-}
+/* ---------------- Sections ---------------- */
 
 function Hero() {
-  const smooth = useSmoothLink();
   return (
     <section id="home" className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 overflow-hidden">
       <div className="absolute inset-0 grid-pattern opacity-70" />
@@ -312,83 +115,48 @@ function Hero() {
       <div className="container relative z-10">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           <div className="lg:col-span-7">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-[#8CC63F]/30 mb-6"
-            >
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border border-[#8CC63F]/30 mb-6">
               <Sparkles className="w-3.5 h-3.5 text-[#8CC63F]" />
-              <span className="text-xs font-semibold tracking-wide text-[#231F20]">
-                Empowering Careers Since 2015
-              </span>
+              <span className="text-xs font-semibold tracking-wide text-[#231F20]">Empowering Careers Since 2015</span>
             </motion.div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.05 }}
-              className="font-display font-extrabold tracking-tight text-[42px] leading-[1.05] sm:text-6xl lg:text-[76px] text-[#231F20] text-balance"
-            >
+            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.05 }}
+              className="font-display font-extrabold tracking-tight text-[42px] leading-[1.05] sm:text-6xl lg:text-[76px] text-[#231F20] text-balance">
               Rediscover Life.<br />
               <span className="brand-gradient-text">Pathway to Success.</span>
             </motion.h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-6 max-w-xl text-[17px] leading-relaxed text-[#231F20]/70"
-            >
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
+              className="mt-6 max-w-xl text-[17px] leading-relaxed text-[#231F20]/70">
               Connect Dharwad empowers students, professionals, and organizations through
               industry-oriented training, recruitment support, and consultancy services.
             </motion.p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="mt-9 flex flex-wrap items-center gap-3"
-            >
-              <a
-                href="#services"
-                onClick={(e) => smooth(e, '#services')}
-                className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#8CC63F] text-white font-semibold shadow-xl shadow-[#8CC63F]/30 hover:bg-[#231F20] hover:shadow-[#231F20]/30 transition-all"
-              >
-                Explore Services
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </a>
-              <a
-                href="#contact"
-                onClick={(e) => smooth(e, '#contact')}
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-[#231F20] font-semibold border border-black/10 hover:border-[#231F20] hover:-translate-y-0.5 transition-all"
-              >
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
+              className="mt-9 flex flex-wrap items-center gap-3">
+              <Link href="/services/corporate-training"
+                className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#8CC63F] text-white font-semibold shadow-xl shadow-[#8CC63F]/30 hover:bg-[#231F20] hover:shadow-[#231F20]/30 transition-all">
+                Explore Services <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link href="/contact"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-[#231F20] font-semibold border border-black/10 hover:border-[#231F20] hover:-translate-y-0.5 transition-all">
                 Contact Us
-              </a>
+              </Link>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="mt-12 flex items-center gap-6"
-            >
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.5 }}
+              className="mt-12 flex items-center gap-6">
               <div className="flex -space-x-3">
                 {['#8CC63F', '#83B9E6', '#231F20', '#6EA82F'].map((c, i) => (
-                  <div
-                    key={i}
-                    className="w-10 h-10 rounded-full ring-2 ring-white flex items-center justify-center text-white text-xs font-bold shadow-md"
-                    style={{ backgroundColor: c }}
-                  >
+                  <div key={i} className="w-10 h-10 rounded-full ring-2 ring-white flex items-center justify-center text-white text-xs font-bold shadow-md" style={{ backgroundColor: c }}>
                     {['A', 'R', 'K', 'M'][i]}
                   </div>
                 ))}
               </div>
               <div>
                 <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3.5 h-3.5 fill-[#8CC63F] text-[#8CC63F]" />
-                  ))}
+                  {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-[#8CC63F] text-[#8CC63F]" />)}
                   <span className="ml-1.5 text-sm font-semibold text-[#231F20]">4.9/5</span>
                 </div>
                 <p className="text-xs text-[#231F20]/60 mt-0.5">Trusted by 5000+ learners</p>
@@ -396,34 +164,18 @@ function Hero() {
             </motion.div>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="lg:col-span-5 relative"
-          >
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, delay: 0.2 }}
+            className="lg:col-span-5 relative">
             <div className="relative">
               <div className="relative aspect-[4/5] w-full max-w-md mx-auto rounded-3xl overflow-hidden shadow-2xl shadow-black/20">
-                <Image
-                  src="https://images.pexels.com/photos/7693729/pexels-photo-7693729.jpeg"
-                  alt="Corporate professionals collaborating"
-                  fill
-                  className="object-cover"
-                  priority
-                  unoptimized
-                />
+                <Image src="https://images.pexels.com/photos/7693729/pexels-photo-7693729.jpeg" alt="Corporate professionals" fill className="object-cover" priority unoptimized />
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#231F20]/60 via-transparent to-[#8CC63F]/25" />
               </div>
 
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -left-4 top-10 sm:-left-10 glass rounded-2xl px-4 py-3 shadow-xl w-52"
-              >
+              <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute -left-4 top-10 sm:-left-10 glass rounded-2xl px-4 py-3 shadow-xl w-52">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#8CC63F]/15 flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-[#6EA82F]" />
-                  </div>
+                  <div className="w-10 h-10 rounded-xl bg-[#8CC63F]/15 flex items-center justify-center"><TrendingUp className="w-5 h-5 text-[#6EA82F]" /></div>
                   <div>
                     <div className="text-lg font-bold text-[#231F20] leading-none">98%</div>
                     <div className="text-[11px] text-[#231F20]/60 mt-0.5">Placement Rate</div>
@@ -431,15 +183,10 @@ function Hero() {
                 </div>
               </motion.div>
 
-              <motion.div
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-                className="absolute -right-3 bottom-16 sm:-right-6 glass rounded-2xl px-4 py-3 shadow-xl w-56"
-              >
+              <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+                className="absolute -right-3 bottom-16 sm:-right-6 glass rounded-2xl px-4 py-3 shadow-xl w-56">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#83B9E6]/25 flex items-center justify-center">
-                    <CheckCircle2 className="w-5 h-5 text-[#5C9CD3]" />
-                  </div>
+                  <div className="w-10 h-10 rounded-xl bg-[#83B9E6]/25 flex items-center justify-center"><CheckCircle2 className="w-5 h-5 text-[#5C9CD3]" /></div>
                   <div>
                     <div className="text-sm font-bold text-[#231F20] leading-none">Industry-Ready</div>
                     <div className="text-[11px] text-[#231F20]/60 mt-0.5">Certified Programs</div>
@@ -447,11 +194,8 @@ function Hero() {
                 </div>
               </motion.div>
 
-              <motion.div
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                className="absolute -bottom-4 left-1/2 -translate-x-1/2 glass rounded-full px-4 py-2 shadow-xl flex items-center gap-2"
-              >
+              <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                className="absolute -bottom-4 left-1/2 -translate-x-1/2 glass rounded-full px-4 py-2 shadow-xl flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-[#8CC63F] animate-pulse" />
                 <span className="text-xs font-semibold text-[#231F20]">Live Workshop Now</span>
               </motion.div>
@@ -467,18 +211,11 @@ function ClientsStrip() {
   return (
     <section className="py-10 border-y border-black/5 bg-[#F7F9FA]">
       <div className="container">
-        <p className="text-center text-xs font-semibold tracking-[0.24em] text-[#231F20]/50 mb-6">
-          TRUSTED BY LEADING ORGANIZATIONS
-        </p>
+        <p className="text-center text-xs font-semibold tracking-[0.24em] text-[#231F20]/50 mb-6">TRUSTED BY LEADING ORGANIZATIONS</p>
         <div className="overflow-hidden relative">
           <div className="flex gap-14 animate-marquee whitespace-nowrap">
             {[...CLIENTS, ...CLIENTS].map((c, i) => (
-              <div
-                key={i}
-                className="text-2xl font-display font-bold text-[#231F20]/25 hover:text-[#8CC63F] transition-colors cursor-default"
-              >
-                {c}
-              </div>
+              <div key={i} className="text-2xl font-display font-bold text-[#231F20]/25 hover:text-[#8CC63F] transition-colors cursor-default">{c}</div>
             ))}
           </div>
           <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#F7F9FA] to-transparent" />
@@ -494,21 +231,9 @@ function About() {
     <section id="about" className="py-24 lg:py-32 relative">
       <div className="container">
         <div className="grid lg:grid-cols-2 gap-14 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6 }}
-            className="relative"
-          >
+          <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.6 }} className="relative">
             <div className="relative aspect-[5/4] rounded-3xl overflow-hidden shadow-2xl">
-              <Image
-                src="https://images.pexels.com/photos/12903168/pexels-photo-12903168.jpeg"
-                alt="Corporate training session"
-                fill
-                className="object-cover"
-                unoptimized
-              />
+              <Image src="https://images.pexels.com/photos/12903168/pexels-photo-12903168.jpeg" alt="Corporate training" fill className="object-cover" unoptimized />
             </div>
             <div className="absolute -bottom-6 -right-6 w-44 h-44 rounded-3xl brand-gradient shadow-2xl flex flex-col items-center justify-center text-white">
               <div className="text-4xl font-display font-extrabold">10+</div>
@@ -516,12 +241,7 @@ function About() {
             </div>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
+          <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.6, delay: 0.1 }}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8CC63F]/10 border border-[#8CC63F]/20 mb-4">
               <span className="text-xs font-semibold tracking-wider text-[#6EA82F]">ABOUT US</span>
             </div>
@@ -547,15 +267,12 @@ function About() {
               ))}
             </div>
 
-            <button
-              onClick={() => toast.info('About page coming in Phase 2')}
-              className="mt-8 inline-flex items-center gap-2 text-[#231F20] font-semibold group"
-            >
+            <Link href="/about" className="mt-8 inline-flex items-center gap-2 text-[#231F20] font-semibold group">
               Read Our Story
               <span className="w-8 h-8 rounded-full bg-[#8CC63F] text-white flex items-center justify-center group-hover:bg-[#231F20] transition-colors">
                 <ArrowRight className="w-4 h-4" />
               </span>
-            </button>
+            </Link>
           </motion.div>
         </div>
       </div>
@@ -568,34 +285,20 @@ function Services() {
     <section id="services" className="py-24 lg:py-32 bg-[#F7F9FA] relative overflow-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full bg-[#8CC63F]/5 blur-3xl" />
       <div className="container relative">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-2xl mx-auto mb-16"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center max-w-2xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#8CC63F]/30 mb-4">
             <span className="text-xs font-semibold tracking-wider text-[#6EA82F]">OUR SERVICES</span>
           </div>
           <h2 className="text-4xl lg:text-5xl font-display font-bold text-[#231F20] text-balance">
             Comprehensive solutions for <span className="brand-gradient-text">every career stage.</span>
           </h2>
-          <p className="mt-5 text-[#231F20]/65 text-[16px]">
-            Three pillars that power the growth of individuals and organizations.
-          </p>
+          <p className="mt-5 text-[#231F20]/65 text-[16px]">Three pillars that power the growth of individuals and organizations.</p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-6">
           {SERVICES.map((s, i) => (
-            <motion.div
-              key={s.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="group relative rounded-3xl bg-white p-8 border border-black/5 hover:border-transparent hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 transition-all duration-500"
-            >
+            <motion.div key={s.title} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-80px' }} transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="group relative rounded-3xl bg-white p-8 border border-black/5 hover:border-transparent hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 transition-all duration-500">
               <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${s.color} flex items-center justify-center shadow-lg mb-6 group-hover:scale-110 transition-transform`}>
                 <s.icon className="w-7 h-7 text-white" />
               </div>
@@ -605,23 +308,16 @@ function Services() {
               <div className="mt-6 grid grid-cols-2 gap-2">
                 {s.features.map((f) => (
                   <div key={f} className="flex items-center gap-1.5 text-xs text-[#231F20]/70">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#8CC63F] shrink-0" />
-                    {f}
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#8CC63F] shrink-0" />{f}
                   </div>
                 ))}
               </div>
 
-              <button
-                onClick={() => toast.info(`${s.title} details coming in Phase 2`)}
-                className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-[#231F20] group-hover:text-[#8CC63F] transition-colors"
-              >
-                Read More
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
+              <Link href={s.href} className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-[#231F20] group-hover:text-[#8CC63F] transition-colors">
+                Read More <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
 
-              <div className="absolute top-6 right-6 text-6xl font-display font-black text-black/[0.03] group-hover:text-[#8CC63F]/10 transition-colors">
-                0{i + 1}
-              </div>
+              <div className="absolute top-6 right-6 text-6xl font-display font-black text-black/[0.03] group-hover:text-[#8CC63F]/10 transition-colors">0{i + 1}</div>
             </motion.div>
           ))}
         </div>
@@ -649,14 +345,8 @@ function Stats() {
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 lg:gap-6">
           {STATS.map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="glass-dark rounded-2xl p-6 lg:p-7 text-center border border-white/10 hover:border-[#8CC63F]/40 transition-all"
-            >
+            <motion.div key={s.label} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }}
+              className="glass-dark rounded-2xl p-6 lg:p-7 text-center border border-white/10 hover:border-[#8CC63F]/40 transition-all">
               <div className="text-4xl lg:text-5xl font-display font-extrabold text-white">
                 <Counter to={s.value} suffix={s.suffix} />
               </div>
@@ -673,13 +363,7 @@ function WhyUs() {
   return (
     <section className="py-24 lg:py-32">
       <div className="container">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-2xl mx-auto mb-14"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center max-w-2xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#83B9E6]/15 border border-[#83B9E6]/30 mb-4">
             <span className="text-xs font-semibold tracking-wider text-[#5C9CD3]">WHY CHOOSE US</span>
           </div>
@@ -690,14 +374,8 @@ function WhyUs() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {WHY_US.map((w, i) => (
-            <motion.div
-              key={w.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.45, delay: i * 0.06 }}
-              className="group rounded-2xl p-7 bg-white border border-black/5 hover:border-[#8CC63F]/40 hover:shadow-xl hover:shadow-[#8CC63F]/10 hover:-translate-y-1 transition-all"
-            >
+            <motion.div key={w.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.45, delay: i * 0.06 }}
+              className="group rounded-2xl p-7 bg-white border border-black/5 hover:border-[#8CC63F]/40 hover:shadow-xl hover:shadow-[#8CC63F]/10 hover:-translate-y-1 transition-all">
               <div className="w-12 h-12 rounded-xl bg-[#8CC63F]/10 flex items-center justify-center group-hover:bg-[#8CC63F] transition-colors">
                 <w.icon className="w-5 h-5 text-[#8CC63F] group-hover:text-white transition-colors" />
               </div>
@@ -715,13 +393,7 @@ function Trainers() {
   return (
     <section className="py-24 lg:py-32 bg-[#F7F9FA]">
       <div className="container">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-14"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-14">
           <div className="max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#8CC63F]/30 mb-4">
               <span className="text-xs font-semibold tracking-wider text-[#6EA82F]">FEATURED TRAINERS</span>
@@ -730,21 +402,13 @@ function Trainers() {
               Industry mentors, <span className="brand-gradient-text">world-class outcomes.</span>
             </h2>
           </div>
-          <p className="text-[#231F20]/65 max-w-sm text-[15px]">
-            Meet our senior faculty — practitioners with decades of enterprise experience.
-          </p>
+          <p className="text-[#231F20]/65 max-w-sm text-[15px]">Meet our senior faculty — practitioners with decades of enterprise experience.</p>
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {TRAINERS.map((t, i) => (
-            <motion.div
-              key={t.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="group rounded-3xl bg-white p-6 border border-black/5 hover:shadow-2xl hover:-translate-y-1 transition-all"
-            >
+            <motion.div key={t.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.5, delay: i * 0.08 }}
+              className="group rounded-3xl bg-white p-6 border border-black/5 hover:shadow-2xl hover:-translate-y-1 transition-all">
               <div className="relative w-full aspect-square rounded-2xl brand-gradient flex items-center justify-center text-white text-5xl font-display font-black overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/20" />
                 <span className="relative">{t.avatar}</span>
@@ -753,18 +417,112 @@ function Trainers() {
                 <div className="font-display font-bold text-[#231F20] text-lg">{t.name}</div>
                 <div className="text-sm text-[#231F20]/60 mt-0.5">{t.role}</div>
                 <div className="mt-3 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-[#8CC63F] bg-[#8CC63F]/10 px-2.5 py-1 rounded-full">
-                    {t.exp}
-                  </span>
-                  <button
-                    onClick={() => toast.info('Trainer profile coming in Phase 2')}
-                    className="w-8 h-8 rounded-full bg-[#F7F9FA] hover:bg-[#0A66C2] hover:text-white flex items-center justify-center text-[#231F20]/60 transition-colors"
-                  >
+                  <span className="text-xs font-semibold text-[#8CC63F] bg-[#8CC63F]/10 px-2.5 py-1 rounded-full">{t.exp}</span>
+                  <a href="#" className="w-8 h-8 rounded-full bg-[#F7F9FA] hover:bg-[#0A66C2] hover:text-white flex items-center justify-center text-[#231F20]/60 transition-colors">
                     <Linkedin className="w-4 h-4" />
-                  </button>
+                  </a>
                 </div>
               </div>
             </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Events() {
+  return (
+    <section className="py-24 lg:py-28">
+      <div className="container">
+        <div className="grid lg:grid-cols-2 gap-8 mb-12">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8CC63F]/10 border border-[#8CC63F]/20 mb-3">
+              <span className="text-xs font-semibold tracking-wider text-[#6EA82F]">UPCOMING EVENTS</span>
+            </div>
+            <h2 className="text-3xl lg:text-4xl font-display font-bold text-[#231F20]">Learn, network, and grow.</h2>
+          </div>
+          <div className="flex lg:justify-end lg:items-end">
+            <Link href="/events" className="inline-flex items-center gap-2 text-sm font-semibold text-[#231F20] hover:text-[#8CC63F] transition-colors">
+              View all events <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-5">
+          {EVENTS.map((e) => (
+            <div key={e.title} className="rounded-2xl bg-white border border-black/5 p-6 hover:shadow-xl hover:-translate-y-1 transition-all">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#8CC63F]/10 text-[#6EA82F] text-xs font-semibold">{e.date}</div>
+              <h3 className="mt-4 text-lg font-display font-bold text-[#231F20]">{e.title}</h3>
+              <div className="mt-2 text-sm text-[#231F20]/60 flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" />{e.loc}</div>
+              <Link href="/events" className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#8CC63F]">
+                Register <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Announcements() {
+  return (
+    <section className="py-16 lg:py-20 bg-[#F7F9FA]">
+      <div className="container">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#83B9E6]/30 mb-3">
+            <span className="text-xs font-semibold tracking-wider text-[#5C9CD3]">LATEST ANNOUNCEMENTS</span>
+          </div>
+          <h2 className="text-3xl lg:text-4xl font-display font-bold text-[#231F20]">What&apos;s happening at Connect Dharwad.</h2>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-4">
+          {ANNOUNCEMENTS.map((a) => (
+            <div key={a.title} className="rounded-2xl bg-white p-6 border border-black/5 hover:shadow-lg transition-shadow">
+              <div className="text-xs text-[#8CC63F] font-semibold">{a.date}</div>
+              <h4 className="mt-2 font-display font-bold text-[#231F20]">{a.title}</h4>
+              <p className="mt-2 text-sm text-[#231F20]/65">{a.desc}</p>
+              <Link href="/events" className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[#231F20] hover:text-[#8CC63F]">
+                Read More <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function GalleryPreview() {
+  const imgs = [
+    'https://images.pexels.com/photos/7693729/pexels-photo-7693729.jpeg',
+    'https://images.pexels.com/photos/12903168/pexels-photo-12903168.jpeg',
+    'https://images.pexels.com/photos/5668498/pexels-photo-5668498.jpeg',
+    'https://images.pexels.com/photos/36733315/pexels-photo-36733315.jpeg',
+    'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg',
+    'https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg',
+  ];
+  return (
+    <section className="py-20 lg:py-24">
+      <div className="container">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8CC63F]/10 border border-[#8CC63F]/20 mb-3">
+              <span className="text-xs font-semibold tracking-wider text-[#6EA82F]">GALLERY</span>
+            </div>
+            <h2 className="text-3xl lg:text-4xl font-display font-bold text-[#231F20]">Moments from our journey.</h2>
+          </div>
+          <Link href="/gallery" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-black/10 text-sm font-semibold text-[#231F20] hover:border-[#231F20] hover:-translate-y-0.5 transition-all">
+            View All <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          {imgs.map((u, i) => (
+            <Link key={i} href="/gallery" className={`relative rounded-2xl overflow-hidden group ${i % 5 === 0 ? 'row-span-2 aspect-square lg:aspect-[1/2]' : 'aspect-square'}`}>
+              <img src={u} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors" />
+            </Link>
           ))}
         </div>
       </div>
@@ -779,20 +537,12 @@ function Testimonials() {
     return () => clearInterval(t);
   }, []);
   const active = TESTIMONIALS[i];
-
   return (
     <section id="testimonials" className="py-24 lg:py-32 relative overflow-hidden">
       <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-[#83B9E6]/15 blur-3xl" />
       <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full bg-[#8CC63F]/10 blur-3xl" />
-
       <div className="container relative">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-2xl mx-auto mb-14"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center max-w-2xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8CC63F]/10 border border-[#8CC63F]/30 mb-4">
             <span className="text-xs font-semibold tracking-wider text-[#6EA82F]">TESTIMONIALS</span>
           </div>
@@ -803,30 +553,20 @@ function Testimonials() {
 
         <div className="max-w-4xl mx-auto">
           <AnimatePresence mode="wait">
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}
-              className="glass rounded-3xl p-8 lg:p-12 border border-white/60 shadow-2xl shadow-black/5"
-            >
+            <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}
+              className="glass rounded-3xl p-8 lg:p-12 border border-white/60 shadow-2xl shadow-black/5">
               <Quote className="w-10 h-10 text-[#8CC63F]/30" />
               <p className="mt-5 text-xl lg:text-2xl leading-relaxed text-[#231F20] font-display font-medium text-balance">
                 &ldquo;{active.quote}&rdquo;
               </p>
               <div className="mt-8 flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl brand-gradient flex items-center justify-center text-white text-lg font-display font-bold shadow-lg">
-                  {active.initials}
-                </div>
+                <div className="w-14 h-14 rounded-2xl brand-gradient flex items-center justify-center text-white text-lg font-display font-bold shadow-lg">{active.initials}</div>
                 <div className="flex-1">
                   <div className="font-display font-bold text-[#231F20]">{active.name}</div>
                   <div className="text-sm text-[#231F20]/60">{active.role}</div>
                 </div>
                 <div className="flex items-center gap-0.5">
-                  {[...Array(active.rating)].map((_, j) => (
-                    <Star key={j} className="w-4 h-4 fill-[#8CC63F] text-[#8CC63F]" />
-                  ))}
+                  {[...Array(active.rating)].map((_, j) => <Star key={j} className="w-4 h-4 fill-[#8CC63F] text-[#8CC63F]" />)}
                 </div>
               </div>
             </motion.div>
@@ -834,15 +574,15 @@ function Testimonials() {
 
           <div className="mt-8 flex items-center justify-center gap-2">
             {TESTIMONIALS.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setI(idx)}
-                aria-label={`Testimonial ${idx + 1}`}
-                className={`h-2 rounded-full transition-all ${
-                  idx === i ? 'bg-[#8CC63F] w-8' : 'bg-[#231F20]/15 w-2 hover:bg-[#231F20]/30'
-                }`}
-              />
+              <button key={idx} onClick={() => setI(idx)} aria-label={`Testimonial ${idx + 1}`}
+                className={`h-2 rounded-full transition-all ${idx === i ? 'bg-[#8CC63F] w-8' : 'bg-[#231F20]/15 w-2 hover:bg-[#231F20]/30'}`} />
             ))}
+          </div>
+
+          <div className="text-center mt-8">
+            <Link href="/testimonials" className="inline-flex items-center gap-2 text-sm font-semibold text-[#231F20] hover:text-[#8CC63F]">
+              Read all testimonials <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </div>
@@ -854,13 +594,8 @@ function CTA() {
   return (
     <section id="contact" className="py-24 lg:py-28">
       <div className="container">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.97 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="relative overflow-hidden rounded-[36px] bg-[#231F20] p-10 lg:p-16"
-        >
+        <motion.div initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
+          className="relative overflow-hidden rounded-[36px] bg-[#231F20] p-10 lg:p-16">
           <div className="absolute -top-32 -right-16 w-[500px] h-[500px] rounded-full bg-[#8CC63F]/25 blur-3xl" />
           <div className="absolute -bottom-32 -left-16 w-[500px] h-[500px] rounded-full bg-[#83B9E6]/15 blur-3xl" />
           <div className="absolute inset-0 grid-pattern opacity-20" />
@@ -878,17 +613,10 @@ function CTA() {
                 programs tailored to your organization&apos;s ambitions.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <button
-                  onClick={() => toast.success('Contact form coming in Phase 2 — meanwhile, reach us at connect@dharwad.org')}
-                  className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#8CC63F] text-[#231F20] font-semibold hover:bg-white transition-colors"
-                >
-                  Contact Us
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-                <a
-                  href="tel:+919876543210"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border border-white/25 text-white font-semibold hover:bg-white/10 transition"
-                >
+                <Link href="/contact" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#8CC63F] text-[#231F20] font-semibold hover:bg-white transition-colors">
+                  Contact Us <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <a href="tel:+919876543210" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border border-white/25 text-white font-semibold hover:bg-white/10 transition">
                   <Phone className="w-4 h-4" /> Call Now
                 </a>
               </div>
@@ -917,84 +645,7 @@ function CTA() {
   );
 }
 
-function Footer() {
-  return (
-    <footer className="bg-[#231F20] text-white/80 pt-16 pb-8">
-      <div className="container">
-        <div className="grid md:grid-cols-4 gap-10">
-          <div className="md:col-span-1">
-            <Logo dark />
-            <p className="mt-5 text-sm text-white/60 leading-relaxed">
-              Empowering students, professionals, and enterprises through world-class training,
-              recruitment, and consultancy.
-            </p>
-            <div className="mt-6 flex gap-2">
-              {[Facebook, Twitter, Linkedin, Instagram].map((Icon, i) => (
-                <button
-                  key={i}
-                  className="w-9 h-9 rounded-full bg-white/5 hover:bg-[#8CC63F] hover:text-[#231F20] border border-white/10 flex items-center justify-center transition-colors"
-                >
-                  <Icon className="w-4 h-4" />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <div className="font-display font-bold text-white text-sm tracking-wider mb-4">QUICK LINKS</div>
-            <ul className="space-y-2.5 text-sm">
-              {['Home', 'About', 'Services', 'Events', 'Gallery', 'Contact'].map((l) => (
-                <li key={l}>
-                  <a href={`#${l.toLowerCase()}`} className="hover:text-[#8CC63F] transition-colors">
-                    {l}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <div className="font-display font-bold text-white text-sm tracking-wider mb-4">SERVICES</div>
-            <ul className="space-y-2.5 text-sm">
-              {['Corporate Training', 'Recruitment', 'Consultancy', 'Skill Development', 'Workshops', 'Industry Connect'].map((l) => (
-                <li key={l}>
-                  <a href="#services" className="hover:text-[#8CC63F] transition-colors">{l}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <div className="font-display font-bold text-white text-sm tracking-wider mb-4">GET IN TOUCH</div>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-[#8CC63F] mt-0.5 shrink-0" />
-                <span className="text-white/70">Dharwad, Karnataka<br />India — 580001</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-[#8CC63F] shrink-0" />
-                <a href="mailto:connect@dharwad.org" className="hover:text-[#8CC63F]">connect@dharwad.org</a>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-[#8CC63F] shrink-0" />
-                <a href="tel:+919876543210" className="hover:text-[#8CC63F]">+91 98765 43210</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/50">
-          <div>© {new Date().getFullYear()} Connect Dharwad. All rights reserved.</div>
-          <div className="flex items-center gap-5">
-            <a href="#" className="hover:text-[#8CC63F]">Privacy</a>
-            <a href="#" className="hover:text-[#8CC63F]">Terms</a>
-            <a href="#" className="hover:text-[#8CC63F]">Cookies</a>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-}
+/* ---------------- Main ---------------- */
 
 function App() {
   return (
@@ -1007,6 +658,9 @@ function App() {
       <Stats />
       <WhyUs />
       <Trainers />
+      <Events />
+      <Announcements />
+      <GalleryPreview />
       <Testimonials />
       <CTA />
       <Footer />
