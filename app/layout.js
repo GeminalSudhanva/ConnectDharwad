@@ -13,6 +13,10 @@ export const metadata = {
   },
   description: 'Connect Dharwad empowers students, professionals, and organizations through industry-oriented training, recruitment support, and consultancy services.',
   keywords: ['corporate training', 'recruitment', 'consultancy', 'skill development', 'Dharwad', 'placement', 'workshops'],
+  icons: {
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
+    apple: '/favicon.svg',
+  },
   openGraph: {
     title: 'Connect Dharwad — Rediscover Life. Pathway to Success.',
     description: 'Industry-oriented training, recruitment, and consultancy services.',

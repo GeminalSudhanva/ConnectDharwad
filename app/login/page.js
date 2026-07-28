@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2, Lock, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import Logo from '@/components/site/Logo';
 
 function LoginForm() {
   const router = useRouter();
@@ -33,15 +34,9 @@ function LoginForm() {
       <div className="absolute -bottom-32 -right-24 w-[440px] h-[440px] rounded-full bg-[#83B9E6]/25 blur-3xl animate-blob" style={{ animationDelay: '3s' }} />
 
       <div className="relative w-full max-w-md">
-        <Link href="/" className="flex items-center gap-2.5 mb-8 justify-center">
-          <div className="w-11 h-11 rounded-xl brand-gradient flex items-center justify-center shadow-lg">
-            <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M4 12 L10 18 L20 6" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          </div>
-          <div className="leading-tight">
-            <div className="font-display font-bold text-[#231F20]">CONNECT</div>
-            <div className="text-[10px] font-semibold tracking-[0.24em] text-[#8CC63F]">DHARWAD</div>
-          </div>
-        </Link>
+        <div className="flex justify-center mb-8">
+          <Logo size="lg" />
+        </div>
 
         <form onSubmit={submit} className="bg-white rounded-3xl p-8 border border-black/5 shadow-2xl shadow-black/5">
           <h1 className="text-2xl font-display font-bold text-[#231F20]">Admin Login</h1>

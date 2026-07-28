@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Left grey square with 2 protruding "connector" nodes -->
+  <rect x="-3" y="27" width="6" height="4" rx="1.2" fill="#BDBDBD"/>
+  <rect x="-3" y="33" width="6" height="4" rx="1.2" fill="#BDBDBD"/>
+  <rect x="1" y="21" width="22" height="22" rx="5" fill="#BDBDBD"/>
+  <!-- Green top square -->
+  <rect x="21" y="1" width="22" height="22" rx="5" fill="#8CC63F"/>
+  <!-- Blue bottom square -->
+  <rect x="21" y="41" width="22" height="22" rx="5" fill="#83B9E6"/>
+  <!-- Subtle inner highlight for depth (optional gradient) -->
+  <rect x="21" y="1" width="22" height="11" rx="5" fill="url(#g1)" opacity="0.25"/>
+  <rect x="21" y="41" width="22" height="11" rx="5" fill="url(#g1)" opacity="0.2"/>
+  <rect x="1" y="21" width="22" height="11" rx="5" fill="url(#g1)" opacity="0.2"/>
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>

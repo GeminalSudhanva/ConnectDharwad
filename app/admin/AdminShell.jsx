@@ -8,6 +8,7 @@ import {
   Image as ImageIcon, BarChart3, Inbox, Building2, LogOut, Menu, X, ExternalLink, Settings,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { LogoMark } from '@/components/site/Logo';
 
 const LINKS = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -41,8 +42,8 @@ export default function AdminShell({ children }) {
       <aside className={`fixed inset-y-0 left-0 w-64 bg-[#231F20] text-white z-40 flex flex-col transition-transform lg:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-6 border-b border-white/5">
           <Link href="/admin" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl brand-gradient flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M4 12 L10 18 L20 6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            <div className="bg-white rounded-xl p-1.5 shrink-0">
+              <LogoMark size={30} />
             </div>
             <div>
               <div className="font-display font-bold text-sm">Connect Dharwad</div>
