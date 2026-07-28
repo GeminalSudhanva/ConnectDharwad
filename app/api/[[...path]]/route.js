@@ -1,40 +1,49 @@
 import { NextResponse } from 'next/server';
-import { v4 as uuidv4 } from 'uuid';
-import { getDb } from '@/lib/mongo';
+import prisma from '@/lib/prisma';
 import { getSession, setSession, clearSession, verifyCredentials } from '@/lib/auth';
 import { sendEmail, contactAdminTemplate, userAckTemplate } from '@/lib/email';
 import { uploadImage } from '@/lib/cloudinary';
 
 const json = (data, init = {}) => NextResponse.json(data, init);
 
+// Map resource name -> prisma model accessor
 const RESOURCES = {
-  trainers: 'trainers',
-  testimonials: 'testimonials',
-  events: 'events',
-  announcements: 'announcements',
-  jobs: 'jobs',
-  gallery: 'gallery',
-  clients: 'clients',
-  stats: 'stats',
+  trainers: 'trainer',
+  testimonials: 'testimonial',
+  events: 'event',
+  announcements: 'announcement',
+  jobs: 'job',
+  gallery: 'galleryItem',
+  clients: 'client',
+  stats: 'stat',
 };
 
 async function requireAuth() {
   const s = await getSession();
-  if (!s) return null;
-  return s;
+  return s || null;
 }
 
-function stripId(doc) {
-  if (!doc) return doc;
-  const { _id, ...rest } = doc;
-  return rest;
+function sanitize(body, model) {
+  const clean = { ...body };
+  delete clean.id;
+  delete clean.createdAt;
+  delete clean.updatedAt;
+  // Coerce number fields
+  if ('rating' in clean) clean.rating = Number(clean.rating) || 5;
+  if ('order' in clean) clean.order = Number(clean.order) || 0;
+  if ('value' in clean) clean.value = Number(clean.value) || 0;
+  // Boolean fields
+  ['approved', 'pinned', 'isPast', 'active'].forEach((k) => {
+    if (k in clean) clean[k] = Boolean(clean[k]);
+  });
+  return clean;
 }
 
 export async function GET(request, { params }) {
   const path = (await params)?.path || [];
   const [head, sub, id] = path;
   try {
-    if (!head || head === 'health') return json({ ok: true, message: 'Connect Dharwad API' });
+    if (!head || head === 'health') return json({ ok: true, message: 'Connect Dharwad API', db: 'Neon PostgreSQL' });
 
     if (head === 'auth' && sub === 'me') {
       const s = await getSession();
@@ -43,9 +52,8 @@ export async function GET(request, { params }) {
 
     // Public reads for landing-page content
     if (head === 'public' && sub && RESOURCES[sub]) {
-      const db = await getDb();
-      const items = await db.collection(RESOURCES[sub]).find({}).sort({ order: 1, createdAt: -1 }).limit(200).toArray();
-      return json({ items: items.map(stripId) });
+      const items = await prisma[RESOURCES[sub]].findMany({ orderBy: [{ order: 'asc' }, { createdAt: 'desc' }] });
+      return json({ items });
     }
 
     // Admin
@@ -54,55 +62,42 @@ export async function GET(request, { params }) {
       if (!s) return json({ error: 'Unauthorized' }, { status: 401 });
 
       if (sub === 'dashboard') {
-        const db = await getDb();
         const [contacts, enquiries, applications, trainers, events, testimonials] = await Promise.all([
-          db.collection('contacts').countDocuments({}),
-          db.collection('enquiries').countDocuments({}),
-          db.collection('applications').countDocuments({}),
-          db.collection('trainers').countDocuments({}),
-          db.collection('events').countDocuments({}),
-          db.collection('testimonials').countDocuments({}),
+          prisma.contact.count(),
+          prisma.enquiry.count(),
+          prisma.application.count(),
+          prisma.trainer.count(),
+          prisma.event.count(),
+          prisma.testimonial.count(),
         ]);
-        const recentContacts = await db.collection('contacts').find({}).sort({ createdAt: -1 }).limit(5).toArray();
-        const recentApplications = await db.collection('applications').find({}).sort({ createdAt: -1 }).limit(5).toArray();
+        const [recentContacts, recentApplications] = await Promise.all([
+          prisma.contact.findMany({ orderBy: { createdAt: 'desc' }, take: 5 }),
+          prisma.application.findMany({ orderBy: { createdAt: 'desc' }, take: 5 }),
+        ]);
         return json({
           counts: { contacts, enquiries, applications, trainers, events, testimonials },
-          recent: { contacts: recentContacts.map(stripId), applications: recentApplications.map(stripId) },
+          recent: { contacts: recentContacts, applications: recentApplications },
         });
       }
 
       if (sub === 'leads') {
-        const db = await getDb();
         const [contacts, enquiries, applications] = await Promise.all([
-          db.collection('contacts').find({}).sort({ createdAt: -1 }).limit(200).toArray(),
-          db.collection('enquiries').find({}).sort({ createdAt: -1 }).limit(200).toArray(),
-          db.collection('applications').find({}).sort({ createdAt: -1 }).limit(200).toArray(),
+          prisma.contact.findMany({ orderBy: { createdAt: 'desc' }, take: 200 }),
+          prisma.enquiry.findMany({ orderBy: { createdAt: 'desc' }, take: 200 }),
+          prisma.application.findMany({ orderBy: { createdAt: 'desc' }, take: 200 }),
         ]);
-        return json({
-          contacts: contacts.map(stripId),
-          enquiries: enquiries.map(stripId),
-          applications: applications.map(stripId),
-        });
+        return json({ contacts, enquiries, applications });
       }
 
       if (RESOURCES[sub]) {
-        const db = await getDb();
-        const items = await db.collection(RESOURCES[sub]).find({}).sort({ order: 1, createdAt: -1 }).toArray();
-        return json({ items: items.map(stripId) });
+        const items = await prisma[RESOURCES[sub]].findMany({ orderBy: [{ order: 'asc' }, { createdAt: 'desc' }] });
+        return json({ items });
       }
-    }
-
-    // Legacy public listing (kept)
-    if (head === 'contact' || head === 'enquiries' || head === 'applications') {
-      const s = await requireAuth();
-      if (!s) return json({ error: 'Unauthorized' }, { status: 401 });
-      const db = await getDb();
-      const items = await db.collection(head === 'contact' ? 'contacts' : head).find({}).sort({ createdAt: -1 }).limit(100).toArray();
-      return json({ items: items.map(stripId) });
     }
 
     return json({ error: 'Not found', route: path.join('/') }, { status: 404 });
   } catch (e) {
+    console.error('[GET]', e);
     return json({ error: e.message }, { status: 500 });
   }
 }
@@ -113,7 +108,6 @@ export async function POST(request, { params }) {
   const body = await request.json().catch(() => ({}));
 
   try {
-    // Auth
     if (head === 'auth' && sub === 'login') {
       const { email, password } = body;
       if (!verifyCredentials(email, password)) return json({ error: 'Invalid credentials' }, { status: 401 });
@@ -125,7 +119,6 @@ export async function POST(request, { params }) {
       return json({ ok: true });
     }
 
-    // Upload (Cloudinary or base64 fallback)
     if (head === 'upload') {
       const s = await requireAuth();
       if (!s) return json({ error: 'Unauthorized' }, { status: 401 });
@@ -135,14 +128,11 @@ export async function POST(request, { params }) {
       return json(res);
     }
 
-    // Public form endpoints
+    // Public forms
     if (head === 'contact') {
       const { name, email, phone, subject, message } = body;
       if (!name || !email || !message) return json({ error: 'name, email and message are required' }, { status: 400 });
-      const db = await getDb();
-      const doc = { id: uuidv4(), name, email, phone: phone || '', subject: subject || 'General', message, createdAt: new Date().toISOString() };
-      await db.collection('contacts').insertOne(doc);
-      // Fire and forget email
+      const doc = await prisma.contact.create({ data: { name, email, phone: phone || null, subject: subject || 'General', message } });
       const notify = process.env.CONTACT_NOTIFY_EMAIL;
       sendEmail({ to: notify, subject: `[Contact] ${subject || 'General'} — ${name}`, html: contactAdminTemplate(doc), replyTo: email }).catch(() => {});
       sendEmail({ to: email, subject: 'We received your message — Connect Dharwad', html: userAckTemplate({ name, type: 'message' }) }).catch(() => {});
@@ -152,9 +142,7 @@ export async function POST(request, { params }) {
     if (head === 'enquiries') {
       const { name, email, phone, program, message, type } = body;
       if (!name || !email) return json({ error: 'name and email are required' }, { status: 400 });
-      const db = await getDb();
-      const doc = { id: uuidv4(), type: type || 'training', name, email, phone: phone || '', program: program || '', message: message || '', createdAt: new Date().toISOString() };
-      await db.collection('enquiries').insertOne(doc);
+      const doc = await prisma.enquiry.create({ data: { type: type || 'training', name, email, phone: phone || null, program: program || null, message: message || null } });
       const notify = process.env.CONTACT_NOTIFY_EMAIL;
       sendEmail({ to: notify, subject: `[Enquiry] ${type || 'training'} — ${name}`, html: contactAdminTemplate(doc), replyTo: email }).catch(() => {});
       sendEmail({ to: email, subject: 'We received your enquiry — Connect Dharwad', html: userAckTemplate({ name, type: 'enquiry' }) }).catch(() => {});
@@ -164,27 +152,25 @@ export async function POST(request, { params }) {
     if (head === 'apply') {
       const { name, email, phone, position, resumeUrl, coverLetter } = body;
       if (!name || !email || !position) return json({ error: 'name, email and position are required' }, { status: 400 });
-      const db = await getDb();
-      const doc = { id: uuidv4(), name, email, phone: phone || '', position, resumeUrl: resumeUrl || '', coverLetter: coverLetter || '', createdAt: new Date().toISOString() };
-      await db.collection('applications').insertOne(doc);
+      const doc = await prisma.application.create({ data: { name, email, phone: phone || null, position, resumeUrl: resumeUrl || null, coverLetter: coverLetter || null } });
       const notify = process.env.CONTACT_NOTIFY_EMAIL;
       sendEmail({ to: notify, subject: `[Application] ${position} — ${name}`, html: contactAdminTemplate(doc), replyTo: email }).catch(() => {});
       sendEmail({ to: email, subject: 'Application received — Connect Dharwad', html: userAckTemplate({ name, type: 'application' }) }).catch(() => {});
       return json({ ok: true, id: doc.id });
     }
 
-    // Admin CRUD create
+    // Admin create
     if (head === 'admin' && RESOURCES[sub]) {
       const s = await requireAuth();
       if (!s) return json({ error: 'Unauthorized' }, { status: 401 });
-      const db = await getDb();
-      const doc = { ...body, id: uuidv4(), createdAt: new Date().toISOString() };
-      await db.collection(RESOURCES[sub]).insertOne(doc);
-      return json({ ok: true, item: stripId(doc) });
+      const data = sanitize(body, sub);
+      const item = await prisma[RESOURCES[sub]].create({ data });
+      return json({ ok: true, item });
     }
 
     return json({ error: 'Not found', route: path.join('/') }, { status: 404 });
   } catch (e) {
+    console.error('[POST]', e);
     return json({ error: e.message }, { status: 500 });
   }
 }
@@ -197,14 +183,13 @@ export async function PUT(request, { params }) {
     if (head === 'admin' && RESOURCES[sub] && id) {
       const s = await requireAuth();
       if (!s) return json({ error: 'Unauthorized' }, { status: 401 });
-      const db = await getDb();
-      const { _id, id: bId, createdAt, ...update } = body;
-      await db.collection(RESOURCES[sub]).updateOne({ id }, { $set: update });
-      const item = await db.collection(RESOURCES[sub]).findOne({ id });
-      return json({ ok: true, item: stripId(item) });
+      const data = sanitize(body, sub);
+      const item = await prisma[RESOURCES[sub]].update({ where: { id }, data });
+      return json({ ok: true, item });
     }
     return json({ error: 'Not found' }, { status: 404 });
   } catch (e) {
+    console.error('[PUT]', e);
     return json({ error: e.message }, { status: 500 });
   }
 }
@@ -216,19 +201,19 @@ export async function DELETE(request, { params }) {
     if (head === 'admin' && RESOURCES[sub] && id) {
       const s = await requireAuth();
       if (!s) return json({ error: 'Unauthorized' }, { status: 401 });
-      const db = await getDb();
-      await db.collection(RESOURCES[sub]).deleteOne({ id });
+      await prisma[RESOURCES[sub]].delete({ where: { id } });
       return json({ ok: true });
     }
-    if (head === 'admin' && (sub === 'contacts' || sub === 'enquiries' || sub === 'applications') && id) {
+    if (head === 'admin' && ['contacts', 'enquiries', 'applications'].includes(sub) && id) {
       const s = await requireAuth();
       if (!s) return json({ error: 'Unauthorized' }, { status: 401 });
-      const db = await getDb();
-      await db.collection(sub).deleteOne({ id });
+      const model = { contacts: 'contact', enquiries: 'enquiry', applications: 'application' }[sub];
+      await prisma[model].delete({ where: { id } });
       return json({ ok: true });
     }
     return json({ error: 'Not found' }, { status: 404 });
   } catch (e) {
+    console.error('[DELETE]', e);
     return json({ error: e.message }, { status: 500 });
   }
 }
