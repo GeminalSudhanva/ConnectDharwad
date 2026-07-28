@@ -1,0 +1,134 @@
+// Prisma schema for Connect Dharwad
+// Once you add DATABASE_URL (Neon Postgres) to .env, run:
+//   npx prisma generate
+//   npx prisma db push
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+}
+
+model Trainer {
+  id         String   @id @default(uuid())
+  name       String
+  role       String
+  experience String?
+  bio        String?
+  photoUrl   String?
+  linkedin   String?
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+}
+
+model Testimonial {
+  id        String   @id @default(uuid())
+  name      String
+  role      String?
+  quote     String
+  rating    Int      @default(5)
+  type      String   @default("Corporate") // Corporate | Student
+  approved  Boolean  @default(true)
+  photoUrl  String?
+  createdAt DateTime @default(now())
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  date        String
+  location    String?
+  bannerUrl   String?
+  description String?
+  registerUrl String?
+  isPast      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Announcement {
+  id          String   @id @default(uuid())
+  title       String
+  date        String
+  description String?
+  pinned      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Job {
+  id        String   @id @default(uuid())
+  title     String
+  company   String
+  location  String?
+  type      String   @default("Full-time")
+  experience String?
+  description String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model GalleryItem {
+  id        String   @id @default(uuid())
+  title     String
+  category  String   @default("Workshops")
+  url       String
+  createdAt DateTime @default(now())
+}
+
+model Client {
+  id       String   @id @default(uuid())
+  name     String
+  logoUrl  String?
+  order    Int      @default(0)
+}
+
+model Stat {
+  id     String @id @default(uuid())
+  key    String @unique
+  value  Int
+  suffix String @default("+")
+  label  String
+  order  Int    @default(0)
+}
+
+model Contact {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model Enquiry {
+  id        String   @id @default(uuid())
+  type      String   @default("training")
+  name      String
+  email     String
+  phone     String?
+  program   String?
+  message   String?
+  createdAt DateTime @default(now())
+}
+
+model Application {
+  id          String   @id @default(uuid())
+  name        String
+  email       String
+  phone       String?
+  position    String
+  resumeUrl   String?
+  coverLetter String?
+  createdAt   DateTime @default(now())
+}
