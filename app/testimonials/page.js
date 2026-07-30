@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '@/components/site/Navbar';
 import Footer from '@/components/site/Footer';
 import PageHeader from '@/components/site/PageHeader';
@@ -8,14 +8,11 @@ import { Quote, Star, Play, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const REVIEWS = [
-  { name: 'Priya Kulkarni', role: 'HR Head, TechNova', type: 'Corporate', quote: 'Connect Dharwad transformed our onboarding pipeline. Their trainers deliver corporate-ready talent that hits the ground running.', rating: 5, initials: 'PK' },
-  { name: 'Rohan Deshpande', role: 'SE, Infosys', type: 'Student', quote: 'The campus-to-corporate program gave me the confidence and skills that made all the difference in my career.', rating: 5, initials: 'RD' },
-  { name: 'Anitha Rao', role: 'Director, MSME Council', type: 'Corporate', quote: 'Professional, insightful, and results-driven. Their consultancy reshaped how we approach workforce development.', rating: 5, initials: 'AR' },
-  { name: 'Vikram Patil', role: 'TA, Wipro', type: 'Corporate', quote: 'Their recruitment team delivers pre-vetted candidates matched to our exact requirements. A strategic partner.', rating: 5, initials: 'VP' },
-  { name: 'Sneha Kamath', role: 'MBA Student', type: 'Student', quote: 'The leadership training changed how I approach problems. Highly recommended for anyone serious about growth.', rating: 5, initials: 'SK' },
-  { name: 'Karthik Rao', role: 'Founder, EduTech Startup', type: 'Corporate', quote: 'Consultancy sessions helped us restructure operations. Real, actionable insights that moved the needle.', rating: 5, initials: 'KR' },
-  { name: 'Deepika Nair', role: 'Graduate 2024', type: 'Student', quote: 'Got placed at Cognizant thanks to their placement team. Interview prep was thorough and industry-relevant.', rating: 5, initials: 'DN' },
-  { name: 'Manoj Bhat', role: 'HR Manager, TCS', type: 'Corporate', quote: 'Efficient, professional, and always delivered on time. Our go-to training partner for the last 3 years.', rating: 5, initials: 'MB' },
+  { name: 'Dr. Purushottam Bung', role: 'Professor & Director, RVIM Bengaluru', type: 'Student', quote: 'CONNECT profiling of our MBA students truly mirrors their current standing which wakes them up to standardize their skills.', rating: 5, initials: 'PB' },
+  { name: 'Dr. Pushkar Singh Kanwal', role: 'Legal Officer at Agri-industry', type: 'Corporate', quote: 'Workshops was excellent for enhancing my skills and abilities regarding seed business in India. It is highly informative for crop failures and its management. It is very useful and required to all employees of the company etc. And, I personally feel that whoever is in Agri-business or seed business must attend this workshop.', rating: 5, initials: 'PK' },
+  { name: 'Dr. Chandrashekar Hunsihal', role: 'Academician', type: 'Corporate', quote: 'Wonderful Outbound Training Programme by Connect. Amazing Learning with Fun & Adventure. Well organized & managed by Team Connect.', rating: 5, initials: 'CH' },
+  { name: 'Mr. T Jayaram', role: 'Senior Manager, Tata Motors', type: 'Student', quote: 'Kats off to YOU & YOUR team for inspiring OUR students and staff.', rating: 5, initials: 'TJ' },
+  { name: 'Mr. MADIVALAPPA', role: 'IR Manager, Toyota Auto Parts Ltd', type: 'Corporate', quote: 'CONNECT through its ODU-GKY program, has transformed many youths & injected Soft Skills in a very interesting way. It has transformed my life.', rating: 5, initials: 'M' },
 ];
 
 const VIDEOS = [
@@ -25,9 +22,22 @@ const VIDEOS = [
 ];
 
 export default function TestimonialsPage() {
+  const [reviews, setReviews] = useState(REVIEWS);
   const [filter, setFilter] = useState('All');
   const [q, setQ] = useState('');
-  const filtered = REVIEWS.filter((r) => (filter === 'All' || r.type === filter) && (r.name.toLowerCase().includes(q.toLowerCase()) || r.quote.toLowerCase().includes(q.toLowerCase())));
+
+  useEffect(() => {
+    fetch('/api/public/testimonials')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.items && d.items.length > 0) {
+          setReviews(d.items);
+        }
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
+  const filtered = reviews.filter((r) => (filter === 'All' || r.type === filter) && (r.name.toLowerCase().includes(q.toLowerCase()) || r.quote.toLowerCase().includes(q.toLowerCase())));
 
   return (
     <main className="min-h-screen bg-white">
@@ -69,7 +79,13 @@ export default function TestimonialsPage() {
                 </div>
                 <p className="mt-4 text-[15px] text-[#231F20]/80 leading-relaxed">&ldquo;{r.quote}&rdquo;</p>
                 <div className="mt-6 flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-xl brand-gradient flex items-center justify-center text-white font-display font-bold">{r.initials}</div>
+                  <div className="w-11 h-11 rounded-xl brand-gradient flex items-center justify-center text-white font-display font-bold overflow-hidden">
+                    {r.photoUrl ? (
+                      <img src={r.photoUrl} alt={r.name} className="w-full h-full object-cover" />
+                    ) : (
+                      r.initials || r.name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase()
+                    )}
+                  </div>
                   <div>
                     <div className="font-display font-bold text-[#231F20]">{r.name}</div>
                     <div className="text-xs text-[#231F20]/60">{r.role}</div>

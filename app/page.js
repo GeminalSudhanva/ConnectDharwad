@@ -39,48 +39,58 @@ const SERVICES = [
 ];
 
 const STATS = [
-  { value: 5000, suffix: '+', label: 'Students Trained' },
-  { value: 150, suffix: '+', label: 'Corporate Workshops' },
-  { value: 200, suffix: '+', label: 'Placements' },
-  { value: 100, suffix: '+', label: 'Industry Partners' },
-  { value: 98, suffix: '%', label: 'Client Satisfaction' },
+  { value: 228984, suffix: '+', label: 'Students' },
+  { value: 523197, suffix: '+', label: 'Employees Trained' },
+  { value: 44607, suffix: '+', label: 'Teachers' },
+  { value: 30231, suffix: '+', label: 'Placements' },
+  { value: 61, suffix: '+', label: 'Udyog Utsavs' },
 ];
 
 const WHY_US = [
-  { icon: Users, title: 'Experienced Trainers', desc: 'Industry veterans with 10+ years of expertise across domains.' },
+  { icon: Users, title: 'Experienced Trainers', desc: 'Industry veterans with corporate expertise across domains.' },
   { icon: Target, title: 'Industry-Oriented Programs', desc: 'Curriculum designed with real-world corporate requirements.' },
-  { icon: Rocket, title: 'Placement Support', desc: 'Dedicated placement cell with 200+ successful placements.' },
+  { icon: Rocket, title: 'Placement Support', desc: 'Dedicated placement cell with successful placements.' },
   { icon: Award, title: 'Expert Consultancy', desc: 'Strategic advisory rooted in deep industry knowledge.' },
-  { icon: HeartHandshake, title: 'Corporate Partnerships', desc: 'Strong network with 100+ leading organizations.' },
+  { icon: HeartHandshake, title: 'Corporate Partnerships', desc: 'Strong network with leading organizations.' },
   { icon: Building2, title: 'Hands-on Workshops', desc: 'Practical, project-driven learning experiences.' },
 ];
 
 const TESTIMONIALS = [
-  { name: 'Priya Kulkarni', role: 'HR Head, TechNova Solutions', quote: 'Connect Dharwad transformed our onboarding pipeline. Their trainers deliver corporate-ready talent that hits the ground running.', rating: 5, initials: 'PK' },
-  { name: 'Rohan Deshpande', role: 'Software Engineer, Infosys', quote: 'The campus-to-corporate program gave me the confidence and skills that made all the difference in my career trajectory.', rating: 5, initials: 'RD' },
-  { name: 'Anitha Rao', role: 'Director, Karnataka MSME Council', quote: 'Professional, insightful, and results-driven. Their consultancy reshaped how we approach workforce development.', rating: 5, initials: 'AR' },
-  { name: 'Vikram Patil', role: 'Talent Acquisition, Wipro', quote: 'Their recruitment team consistently delivers pre-vetted candidates matched to our exact requirements. Truly a strategic partner.', rating: 5, initials: 'VP' },
+  { name: 'Dr. Purushottam Bung', role: 'Professor & Director, RVIM Bengaluru', quote: 'CONNECT profiling of our MBA students truly mirrors their current standing which wakes them up to standardize their skills.', rating: 5, initials: 'PB' },
+  { name: 'Dr. Pushkar Singh Kanwal', role: 'Legal Officer at Agri-industry', quote: 'Workshops was excellent for enhancing my skills and abilities regarding seed business in India. It is highly informative for crop failures and its management. It is very useful and required to all employees of the company etc.', rating: 5, initials: 'PK' },
+  { name: 'Dr. Chandrashekar Hunsihal', role: 'Academician', quote: 'Wonderful Outbound Training Programme by Connect. Amazing Learning with Fun & Adventure. Well organized & managed by Team Connect.', rating: 5, initials: 'CH' },
+  { name: 'Mr. T Jayaram', role: 'Senior Manager, Tata Motors', quote: 'Kats off to YOU & YOUR team for inspiring OUR students and staff.', rating: 5, initials: 'TJ' },
+  { name: 'Mr. MADIVALAPPA', role: 'IR Manager, Toyota Auto Parts Ltd', quote: 'CONNECT through its ODU-GKY program, has transformed many youths & injected Soft Skills in a very interesting way. It has transformed my life.', rating: 5, initials: 'M' },
 ];
 
-const CLIENTS = ['Infosys', 'Wipro', 'TCS', 'Accenture', 'Cognizant', 'HCL', 'Tech Mahindra', 'Capgemini', 'Deloitte', 'IBM', 'Mindtree', 'Mphasis'];
+const CLIENTS = [
+  'Toyota Kirloskar Motors Ltd',
+  'Honda',
+  'Tata Marcopolo Ltd',
+  'Toyota Auto Parts',
+  'TDPS',
+  'NTTF',
+  'LIC',
+  'JSW',
+  'PwC',
+  'Cargill',
+  'Societe Generale',
+  'DLF',
+  'Tata Motors',
+];
 
 const TRAINERS = [
-  { name: 'Dr. Suresh Hegde', role: 'Lead Corporate Trainer', exp: '18+ yrs', avatar: 'SH' },
-  { name: 'Meera Joshi', role: 'Soft Skills Specialist', exp: '12+ yrs', avatar: 'MJ' },
-  { name: 'Arjun Nayak', role: 'Recruitment Head', exp: '15+ yrs', avatar: 'AN' },
-  { name: 'Kavya Shetty', role: 'Leadership Coach', exp: '10+ yrs', avatar: 'KS' },
+  { name: 'Girish Angadi', role: 'Founder & MD', exp: 'Corporate Trainer', avatar: 'GA' },
+  { name: 'Nagendrappa S', role: 'Co-founder & Executive Director', exp: 'Soft Skill Trainer', avatar: 'NS' },
+  { name: 'J Reghupathi', role: 'Co-Founder', exp: 'Soft Skill Trainer', avatar: 'JR' },
+  { name: 'Mahesh Masal', role: 'Life Coach', exp: 'Life Coach', avatar: 'MM' },
 ];
 
-const EVENTS = [
-  { title: 'AI for Business Leaders', date: 'Jul 15, 2025', loc: 'Dharwad' },
-  { title: 'Campus to Corporate Bootcamp', date: 'Aug 5, 2025', loc: 'Hubli' },
-  { title: 'Leadership Excellence Summit', date: 'Sep 20, 2025', loc: 'Bengaluru' },
-];
+const EVENTS = [];
 
 const ANNOUNCEMENTS = [
-  { title: 'New Batch Starting: Full-Stack Bootcamp', date: 'Jun 30, 2025', desc: 'Enrollments open for our flagship 12-week program.' },
-  { title: 'Partnership with Infosys Announced', date: 'Jun 18, 2025', desc: 'Strategic tie-up for placements and internships.' },
-  { title: 'Career Fair 2025 \u2014 Registrations Open', date: 'Jun 10, 2025', desc: '50+ companies, 500+ opportunities. Register now.' },
+  { title: 'CONNECT Udyog Utsav 2026', date: 'Jul 2026', desc: 'Bridging the gap between North Karnataka\'s talent and leading companies.' },
+  { title: 'Soft Skills Training Launch', date: 'Aug 2026', desc: 'New batch starting for communication skills, team building, and leadership training.' },
 ];
 
 /* ---------------- Utilities ---------------- */
@@ -208,13 +218,23 @@ function Hero() {
 }
 
 function ClientsStrip() {
+  const [clients, setClients] = useState(CLIENTS);
+  useEffect(() => {
+    fetch('/api/public/clients')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.items && d.items.length > 0) setClients(d.items.map((c) => c.name));
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
   return (
     <section className="py-10 border-y border-black/5 bg-[#F7F9FA]">
       <div className="container">
         <p className="text-center text-xs font-semibold tracking-[0.24em] text-[#231F20]/50 mb-6">TRUSTED BY LEADING ORGANIZATIONS</p>
         <div className="overflow-hidden relative">
           <div className="flex gap-14 animate-marquee whitespace-nowrap">
-            {[...CLIENTS, ...CLIENTS].map((c, i) => (
+            {[...clients, ...clients].map((c, i) => (
               <div key={i} className="text-2xl font-display font-bold text-[#231F20]/25 hover:text-[#8CC63F] transition-colors cursor-default">{c}</div>
             ))}
           </div>
@@ -327,6 +347,16 @@ function Services() {
 }
 
 function Stats() {
+  const [stats, setStats] = useState(STATS);
+  useEffect(() => {
+    fetch('/api/public/stats')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.items && d.items.length > 0) setStats(d.items);
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
   return (
     <section className="py-20 lg:py-24 bg-[#231F20] relative overflow-hidden">
       <div className="absolute inset-0 grid-pattern opacity-30" />
@@ -343,8 +373,8 @@ function Stats() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 lg:gap-6">
-          {STATS.map((s, i) => (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+          {stats.map((s, i) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }}
               className="glass-dark rounded-2xl p-6 lg:p-7 text-center border border-white/10 hover:border-[#8CC63F]/40 transition-all">
               <div className="text-4xl lg:text-5xl font-display font-extrabold text-white">
@@ -390,6 +420,19 @@ function WhyUs() {
 }
 
 function Trainers() {
+  const [trainers, setTrainers] = useState(TRAINERS);
+  const [showAll, setShowAll] = useState(false);
+  useEffect(() => {
+    fetch('/api/public/trainers')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.items && d.items.length > 0) setTrainers(d.items);
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
+  const visibleTrainers = showAll ? trainers : trainers.slice(0, 4);
+
   return (
     <section className="py-24 lg:py-32 bg-[#F7F9FA]">
       <div className="container">
@@ -406,32 +449,59 @@ function Trainers() {
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {TRAINERS.map((t, i) => (
-            <motion.div key={t.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="group rounded-3xl bg-white p-6 border border-black/5 hover:shadow-2xl hover:-translate-y-1 transition-all">
-              <div className="relative w-full aspect-square rounded-2xl brand-gradient flex items-center justify-center text-white text-5xl font-display font-black overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/20" />
-                <span className="relative">{t.avatar}</span>
-              </div>
-              <div className="mt-5">
-                <div className="font-display font-bold text-[#231F20] text-lg">{t.name}</div>
-                <div className="text-sm text-[#231F20]/60 mt-0.5">{t.role}</div>
-                <div className="mt-3 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-[#8CC63F] bg-[#8CC63F]/10 px-2.5 py-1 rounded-full">{t.exp}</span>
-                  <a href="#" className="w-8 h-8 rounded-full bg-[#F7F9FA] hover:bg-[#0A66C2] hover:text-white flex items-center justify-center text-[#231F20]/60 transition-colors">
-                    <Linkedin className="w-4 h-4" />
-                  </a>
+          {visibleTrainers.map((t, i) => {
+            const initials = t.name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase();
+            return (
+              <motion.div key={t.id || t.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="group rounded-3xl bg-white p-6 border border-black/5 hover:shadow-2xl hover:-translate-y-1 transition-all">
+                <div className="relative w-full aspect-square rounded-2xl brand-gradient flex items-center justify-center text-white text-5xl font-display font-black overflow-hidden">
+                  {t.photoUrl ? (
+                    <img src={t.photoUrl} alt={t.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <>
+                      <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/20" />
+                      <span className="relative">{t.avatar || initials}</span>
+                    </>
+                  )}
                 </div>
-              </div>
-            </motion.div>
-          ))}
+                <div className="mt-5">
+                  <div className="font-display font-bold text-[#231F20] text-lg">{t.name}</div>
+                  <div className="text-sm text-[#231F20]/60 mt-0.5">{t.role}</div>
+                  <div className="mt-3 flex items-center justify-between">
+                    <span className="text-xs font-semibold text-[#8CC63F] bg-[#8CC63F]/10 px-2.5 py-1 rounded-full">{t.experience || t.exp || 'Faculty'}</span>
+                    <a href={t.linkedin || '#'} className="w-8 h-8 rounded-full bg-[#F7F9FA] hover:bg-[#0A66C2] hover:text-white flex items-center justify-center text-[#231F20]/60 transition-colors">
+                      <Linkedin className="w-4 h-4" />
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
+
+        {trainers.length > 4 && (
+          <div className="text-center mt-12">
+            <button onClick={() => setShowAll(!showAll)} className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#8CC63F] hover:bg-[#231F20] text-white font-semibold transition-colors shadow-lg shadow-[#8CC63F]/20">
+              {showAll ? 'View Less' : 'View More'}
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
 }
 
 function Events() {
+  const [events, setEvents] = useState(EVENTS);
+  useEffect(() => {
+    fetch('/api/public/events')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.items && d.items.length > 0) setEvents(d.items.filter((e) => !e.isPast));
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
   return (
     <section className="py-24 lg:py-28">
       <div className="container">
@@ -450,14 +520,20 @@ function Events() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-5">
-          {EVENTS.map((e) => (
+          {events.map((e) => (
             <div key={e.title} className="rounded-2xl bg-white border border-black/5 p-6 hover:shadow-xl hover:-translate-y-1 transition-all">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#8CC63F]/10 text-[#6EA82F] text-xs font-semibold">{e.date}</div>
               <h3 className="mt-4 text-lg font-display font-bold text-[#231F20]">{e.title}</h3>
-              <div className="mt-2 text-sm text-[#231F20]/60 flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" />{e.loc}</div>
-              <Link href="/events" className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#8CC63F]">
-                Register <ArrowRight className="w-4 h-4" />
-              </Link>
+              {e.registerUrl && e.registerUrl.trim() !== '' ? (
+                <a
+                  href={e.registerUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#8CC63F]"
+                >
+                  Register <ArrowRight className="w-4 h-4" />
+                </a>
+              ) : null}
             </div>
           ))}
         </div>
@@ -467,6 +543,16 @@ function Events() {
 }
 
 function Announcements() {
+  const [announcements, setAnnouncements] = useState(ANNOUNCEMENTS);
+  useEffect(() => {
+    fetch('/api/public/announcements')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.items && d.items.length > 0) setAnnouncements(d.items);
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
   return (
     <section className="py-16 lg:py-20 bg-[#F7F9FA]">
       <div className="container">
@@ -478,14 +564,25 @@ function Announcements() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-4">
-          {ANNOUNCEMENTS.map((a) => (
-            <div key={a.title} className="rounded-2xl bg-white p-6 border border-black/5 hover:shadow-lg transition-shadow">
-              <div className="text-xs text-[#8CC63F] font-semibold">{a.date}</div>
-              <h4 className="mt-2 font-display font-bold text-[#231F20]">{a.title}</h4>
-              <p className="mt-2 text-sm text-[#231F20]/65">{a.desc}</p>
-              <Link href="/events" className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[#231F20] hover:text-[#8CC63F]">
-                Read More <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+          {announcements.map((a) => (
+            <div key={a.title} className="rounded-2xl bg-white border border-black/5 overflow-hidden hover:shadow-lg transition-all flex flex-col">
+              {a.imageUrl && (
+                <div className="relative aspect-[16/9] w-full bg-black/5 overflow-hidden">
+                  <img src={a.imageUrl} alt={a.title} className="w-full h-full object-cover" />
+                </div>
+              )}
+              <div className="p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <div className="text-xs text-[#8CC63F] font-semibold">{a.date}</div>
+                  <h4 className="mt-2 font-display font-bold text-[#231F20]">{a.title}</h4>
+                  <p className="mt-2 text-sm text-[#231F20]/65 line-clamp-3">{a.description || a.desc}</p>
+                </div>
+                <div className="mt-4">
+                  <Link href="/events" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#231F20] hover:text-[#8CC63F]">
+                    Read More <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -495,7 +592,17 @@ function Announcements() {
 }
 
 function GalleryPreview() {
-  const imgs = [
+  const [gallery, setGallery] = useState([]);
+  useEffect(() => {
+    fetch('/api/public/gallery')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.items && d.items.length > 0) setGallery(d.items.slice(0, 6));
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
+  const fallbackImgs = [
     'https://images.pexels.com/photos/7693729/pexels-photo-7693729.jpeg',
     'https://images.pexels.com/photos/12903168/pexels-photo-12903168.jpeg',
     'https://images.pexels.com/photos/5668498/pexels-photo-5668498.jpeg',
@@ -503,6 +610,9 @@ function GalleryPreview() {
     'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg',
     'https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg',
   ];
+
+  const imgs = gallery.length > 0 ? gallery.map((g) => g.url) : fallbackImgs;
+
   return (
     <section className="py-20 lg:py-24">
       <div className="container">
@@ -531,12 +641,28 @@ function GalleryPreview() {
 }
 
 function Testimonials() {
+  const [testimonials, setTestimonials] = useState(TESTIMONIALS);
   const [i, setI] = useState(0);
+
   useEffect(() => {
-    const t = setInterval(() => setI((v) => (v + 1) % TESTIMONIALS.length), 6000);
-    return () => clearInterval(t);
+    fetch('/api/public/testimonials')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.items && d.items.length > 0) setTestimonials(d.items);
+      })
+      .catch((e) => console.error(e));
   }, []);
-  const active = TESTIMONIALS[i];
+
+  useEffect(() => {
+    if (testimonials.length === 0) return;
+    const t = setInterval(() => setI((v) => (v + 1) % testimonials.length), 6000);
+    return () => clearInterval(t);
+  }, [testimonials]);
+
+  if (testimonials.length === 0) return null;
+  const active = testimonials[i];
+  const initials = active.name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase();
+
   return (
     <section id="testimonials" className="py-24 lg:py-32 relative overflow-hidden">
       <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-[#83B9E6]/15 blur-3xl" />
@@ -560,7 +686,13 @@ function Testimonials() {
                 &ldquo;{active.quote}&rdquo;
               </p>
               <div className="mt-8 flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl brand-gradient flex items-center justify-center text-white text-lg font-display font-bold shadow-lg">{active.initials}</div>
+                <div className="w-14 h-14 rounded-2xl brand-gradient flex items-center justify-center text-white text-lg font-display font-bold shadow-lg overflow-hidden">
+                  {active.photoUrl ? (
+                    <img src={active.photoUrl} alt={active.name} className="w-full h-full object-cover" />
+                  ) : (
+                    initials
+                  )}
+                </div>
                 <div className="flex-1">
                   <div className="font-display font-bold text-[#231F20]">{active.name}</div>
                   <div className="text-sm text-[#231F20]/60">{active.role}</div>
@@ -573,7 +705,7 @@ function Testimonials() {
           </AnimatePresence>
 
           <div className="mt-8 flex items-center justify-center gap-2">
-            {TESTIMONIALS.map((_, idx) => (
+            {testimonials.map((_, idx) => (
               <button key={idx} onClick={() => setI(idx)} aria-label={`Testimonial ${idx + 1}`}
                 className={`h-2 rounded-full transition-all ${idx === i ? 'bg-[#8CC63F] w-8' : 'bg-[#231F20]/15 w-2 hover:bg-[#231F20]/30'}`} />
             ))}
@@ -616,16 +748,16 @@ function CTA() {
                 <Link href="/contact" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#8CC63F] text-[#231F20] font-semibold hover:bg-white transition-colors">
                   Contact Us <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <a href="tel:+919876543210" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border border-white/25 text-white font-semibold hover:bg-white/10 transition">
+                <a href="tel:+919845513016" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border border-white/25 text-white font-semibold hover:bg-white/10 transition">
                   <Phone className="w-4 h-4" /> Call Now
                 </a>
               </div>
             </div>
             <div className="lg:col-span-2 space-y-3">
               {[
-                { icon: MapPin, label: 'Visit Us', value: 'Dharwad, Karnataka, India' },
-                { icon: Mail, label: 'Email', value: 'connect@dharwad.org' },
-                { icon: Phone, label: 'Call', value: '+91 98765 43210' },
+                { icon: MapPin, label: 'Visit Us', value: 'Near Court Circle, Dharwad - 580001' },
+                { icon: Mail, label: 'Email', value: 'girishangadi2008@gmail.com' },
+                { icon: Phone, label: 'Call', value: '+91 98455 13016' },
               ].map((c) => (
                 <div key={c.label} className="glass-dark rounded-2xl p-4 flex items-center gap-4">
                   <div className="w-11 h-11 rounded-xl bg-[#8CC63F]/20 flex items-center justify-center">

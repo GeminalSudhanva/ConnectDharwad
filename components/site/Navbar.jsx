@@ -109,12 +109,6 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden lg:flex items-center gap-2">
-          <button
-            onClick={() => toast.info('Admin login coming soon')}
-            className="px-4 py-2 text-sm font-medium text-[#231F20]/70 hover:text-[#231F20] rounded-full"
-          >
-            Login
-          </button>
           <Link
             href="/contact"
             className="group relative inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#8CC63F] text-white text-sm font-semibold shadow-lg shadow-[#8CC63F]/25 hover:bg-[#231F20] transition-colors"

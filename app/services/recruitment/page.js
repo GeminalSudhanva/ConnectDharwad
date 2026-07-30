@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '@/components/site/Navbar';
 import Footer from '@/components/site/Footer';
 import PageHeader from '@/components/site/PageHeader';
@@ -24,10 +24,22 @@ const FAQS = [
 ];
 
 export default function RecruitmentPage() {
+  const [jobs, setJobs] = useState(JOBS);
   const [openFaq, setOpenFaq] = useState(null);
   const [applyFor, setApplyFor] = useState(null);
   const [form, setForm] = useState({ name: '', email: '', phone: '', coverLetter: '' });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/public/jobs')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.items && d.items.length > 0) {
+          setJobs(d.items.filter((j) => j.active));
+        }
+      })
+      .catch((e) => console.error(e));
+  }, []);
 
   const submitApp = async (e) => {
     e.preventDefault();
@@ -66,9 +78,9 @@ export default function RecruitmentPage() {
             </div>
           </div>
           <div className="space-y-3">
-            {JOBS.map((j, i) => (
+            {jobs.map((j, i) => (
               <motion.div
-                key={i}
+                key={j.id || i}
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -86,9 +98,9 @@ export default function RecruitmentPage() {
                     </div>
                     <div className="mt-1 text-sm text-[#231F20]/60">{j.company}</div>
                     <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-[#231F20]/60">
-                      <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{j.loc}</span>
-                      <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{j.exp}</span>
-                      <span className="text-[#8CC63F]">Posted {j.posted}</span>
+                      <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{j.location || j.loc}</span>
+                      <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{j.experience || j.exp || 'Not specified'}</span>
+                      <span className="text-[#8CC63F]">{j.createdAt ? `Posted ${new Date(j.createdAt).toLocaleDateString()}` : `Posted ${j.posted}`}</span>
                     </div>
                   </div>
                   <button

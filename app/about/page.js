@@ -1,28 +1,39 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import PageHeader from '@/components/site/PageHeader';
 import Navbar from '@/components/site/Navbar';
 import Footer from '@/components/site/Footer';
-import Image from 'next/image';
-import { Target, Eye, Heart, Award, Users, Rocket, CheckCircle2 } from 'lucide-react';
-
-export const metadata = { title: 'About — Connect Dharwad' };
+import { Target, Eye, Heart, Award, Users, Rocket } from 'lucide-react';
 
 const TIMELINE = [
-  { year: '2015', title: 'Founded in Dharwad', desc: 'Connect Dharwad was born with a mission to bridge academia and industry.' },
-  { year: '2017', title: 'First 1000 Trainees', desc: 'Crossed 1000+ students trained across technical and soft-skills programs.' },
-  { year: '2019', title: 'Corporate Partnerships', desc: 'Onboarded 50+ enterprise partners across IT, BFSI, and Manufacturing.' },
-  { year: '2021', title: 'Consultancy Vertical', desc: 'Launched strategic advisory for MSMEs and workforce development.' },
-  { year: '2023', title: '5000+ Impact', desc: 'Reached 5000+ learners with a 98% placement satisfaction rate.' },
-  { year: '2025', title: 'National Expansion', desc: 'Expanding programs across South India with digital-first delivery.' },
+  { year: '2013', title: 'CONNECT Founded', desc: 'Started value-added training establishment adopting a unique methodology to bring about desired behavioral changes in individuals.' },
+  { year: '2021', title: 'Recruitment Services Established', desc: 'Launched recruitment vertical to meet manpower demands of brands like Toyota Kirloskar, Honda, Tata Marcopolo, etc.' },
+  { year: '2025', title: 'Dynamic Impact Milestone', desc: 'Crossed 2.2L+ students, 5.2L+ employees, and 44k+ teachers trained, with 30k+ placements.' },
 ];
 
 const LEADERS = [
-  { name: 'Rajesh Kulkarni', role: 'Founder & CEO', bio: '25+ yrs of enterprise leadership at Fortune 500 firms.', initials: 'RK' },
-  { name: 'Dr. Suresh Hegde', role: 'Chief Academic Officer', bio: 'PhD in Management, 18+ yrs of corporate training.', initials: 'SH' },
-  { name: 'Meera Joshi', role: 'Head of Consulting', bio: 'Ex-Deloitte consultant with deep sectoral expertise.', initials: 'MJ' },
-  { name: 'Arjun Nayak', role: 'Head of Recruitment', bio: 'Placed 2000+ candidates across leading MNCs.', initials: 'AN' },
+  { name: 'Girish Angadi', role: 'Founder & MD', bio: 'Human Resource Expert and Corporate Trainer leading Connect Dharwad.', initials: 'GA' },
+  { name: 'Nagendrappa S', role: 'Co-founder & Executive Director', bio: 'Soft Skill Trainer guiding candidate behavioral growth.', initials: 'NS' },
+  { name: 'J Reghupathi', role: 'Co-Founder', bio: 'Soft Skill Trainer driving custom organizational training.', initials: 'JR' },
+  { name: 'Mahesh Masal', role: 'Life Coach', bio: 'Helping professionals and students motivate and excel.', initials: 'MM' },
 ];
 
 export default function AboutPage() {
+  const [leaders, setLeaders] = useState(LEADERS);
+  const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/public/trainers')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.items && d.items.length > 0) setLeaders(d.items);
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
+  const visibleLeaders = showAll ? leaders : leaders.slice(0, 4);
+
   return (
     <main className="min-h-screen bg-white">
       <Navbar />
@@ -96,17 +107,32 @@ export default function AboutPage() {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {LEADERS.map((l) => (
-              <div key={l.name} className="rounded-3xl bg-white p-6 border border-black/5 hover:shadow-2xl transition-all">
-                <div className="relative w-full aspect-square rounded-2xl brand-gradient flex items-center justify-center text-white text-5xl font-display font-black">
-                  {l.initials}
+            {visibleLeaders.map((l) => {
+              const initials = l.initials || l.name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase();
+              return (
+                <div key={l.name} className="rounded-3xl bg-white p-6 border border-black/5 hover:shadow-2xl transition-all">
+                  <div className="relative w-full aspect-square rounded-2xl brand-gradient flex items-center justify-center text-white text-5xl font-display font-black overflow-hidden">
+                    {l.photoUrl ? (
+                      <img src={l.photoUrl} alt={l.name} className="w-full h-full object-cover" />
+                    ) : (
+                      initials
+                    )}
+                  </div>
+                  <div className="mt-4 font-display font-bold text-[#231F20]">{l.name}</div>
+                  <div className="text-sm text-[#8CC63F] font-semibold">{l.role}</div>
+                  <p className="mt-2 text-[13px] text-[#231F20]/65 leading-relaxed">{l.bio || l.description}</p>
                 </div>
-                <div className="mt-4 font-display font-bold text-[#231F20]">{l.name}</div>
-                <div className="text-sm text-[#8CC63F] font-semibold">{l.role}</div>
-                <p className="mt-2 text-[13px] text-[#231F20]/65 leading-relaxed">{l.bio}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
+
+          {leaders.length > 4 && (
+            <div className="text-center mt-12">
+              <button onClick={() => setShowAll(!showAll)} className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#8CC63F] hover:bg-[#231F20] text-white font-semibold transition-colors shadow-lg shadow-[#8CC63F]/20">
+                {showAll ? 'View Less' : 'View More'}
+              </button>
+            </div>
+          )}
         </div>
       </section>
 

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { MapPin, Mail, Phone, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { MapPin, Mail, Phone, Facebook, Instagram } from 'lucide-react';
 import Logo from './Logo';
 
 export default function Footer() {
@@ -14,13 +14,19 @@ export default function Footer() {
               recruitment, and consultancy.
             </p>
             <div className="mt-6 flex gap-2">
-              {[Facebook, Twitter, Linkedin, Instagram].map((Icon, i) => (
-                <button
+              {[
+                { Icon: Facebook, href: 'https://www.facebook.com/Connectdwd' },
+                { Icon: Instagram, href: 'https://instagram.com/_connect_hiring_jobs_' },
+              ].map((x, i) => (
+                <a
                   key={i}
+                  href={x.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-9 h-9 rounded-full bg-white/5 hover:bg-[#8CC63F] hover:text-[#231F20] border border-white/10 flex items-center justify-center transition-colors"
                 >
-                  <Icon className="w-4 h-4" />
-                </button>
+                  <x.Icon className="w-4 h-4" />
+                </a>
               ))}
             </div>
           </div>
@@ -62,15 +68,15 @@ export default function Footer() {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[#8CC63F] mt-0.5 shrink-0" />
-                <span className="text-white/70">Dharwad, Karnataka<br />India — 580001</span>
+                <span className="text-white/70">1st Floor, Above Basappa Khanavali,<br />Near Court Circle, Dharwad - 580001</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-[#8CC63F] shrink-0" />
-                <a href="mailto:connect@dharwad.org" className="hover:text-[#8CC63F]">connect@dharwad.org</a>
+                <a href="mailto:girishangadi2008@gmail.com" className="hover:text-[#8CC63F]">girishangadi2008@gmail.com</a>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#8CC63F] shrink-0" />
-                <a href="tel:+919876543210" className="hover:text-[#8CC63F]">+91 98765 43210</a>
+                <a href="tel:+919845513016" className="hover:text-[#8CC63F]">+91 98455 13016</a>
               </li>
             </ul>
           </div>

@@ -39,6 +39,12 @@ function sanitize(body, model) {
   return clean;
 }
 
+function getOrderBy(resource) {
+  if (resource === 'trainers') return [{ order: 'asc' }, { createdAt: 'desc' }];
+  if (resource === 'clients' || resource === 'stats') return [{ order: 'asc' }];
+  return [{ createdAt: 'desc' }];
+}
+
 export async function GET(request, { params }) {
   const path = (await params)?.path || [];
   const [head, sub, id] = path;
@@ -52,7 +58,7 @@ export async function GET(request, { params }) {
 
     // Public reads for landing-page content
     if (head === 'public' && sub && RESOURCES[sub]) {
-      const items = await prisma[RESOURCES[sub]].findMany({ orderBy: [{ order: 'asc' }, { createdAt: 'desc' }] });
+      const items = await prisma[RESOURCES[sub]].findMany({ orderBy: getOrderBy(sub) });
       return json({ items });
     }
 
@@ -90,7 +96,7 @@ export async function GET(request, { params }) {
       }
 
       if (RESOURCES[sub]) {
-        const items = await prisma[RESOURCES[sub]].findMany({ orderBy: [{ order: 'asc' }, { createdAt: 'desc' }] });
+        const items = await prisma[RESOURCES[sub]].findMany({ orderBy: getOrderBy(sub) });
         return json({ items });
       }
     }

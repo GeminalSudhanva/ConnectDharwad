@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Navbar from '@/components/site/Navbar';
 import Footer from '@/components/site/Footer';
 import PageHeader from '@/components/site/PageHeader';
@@ -8,29 +8,28 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 
-const IMAGES = [
-  { url: 'https://images.pexels.com/photos/7693729/pexels-photo-7693729.jpeg', cat: 'Corporate Training', title: 'Executive workshop' },
-  { url: 'https://images.pexels.com/photos/12903168/pexels-photo-12903168.jpeg', cat: 'Workshops', title: 'Skills bootcamp' },
-  { url: 'https://images.pexels.com/photos/5668498/pexels-photo-5668498.jpeg', cat: 'Consultancy', title: 'Strategy session' },
-  { url: 'https://images.pexels.com/photos/36733315/pexels-photo-36733315.jpeg', cat: 'Corporate Training', title: 'Team collaboration' },
-  { url: 'https://images.unsplash.com/photo-1580893246395-52aead8960dc', cat: 'Recruitment', title: 'Partnership handshake' },
-  { url: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg', cat: 'Seminars', title: 'Panel discussion' },
-  { url: 'https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg', cat: 'Workshops', title: 'Group activity' },
-  { url: 'https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg', cat: 'Campus Events', title: 'Campus visit' },
-  { url: 'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg', cat: 'Industrial Visits', title: 'Industry tour' },
-  { url: 'https://images.pexels.com/photos/3184639/pexels-photo-3184639.jpeg', cat: 'Corporate Training', title: 'Leadership program' },
-  { url: 'https://images.pexels.com/photos/3184611/pexels-photo-3184611.jpeg', cat: 'Seminars', title: 'Networking event' },
-  { url: 'https://images.pexels.com/photos/3182833/pexels-photo-3182833.jpeg', cat: 'Consultancy', title: 'Client meeting' },
-];
+const IMAGES = [];
 
 const CATEGORIES = ['All', 'Corporate Training', 'Recruitment', 'Consultancy', 'Workshops', 'Seminars', 'Industrial Visits', 'Campus Events'];
 
 export default function GalleryPage() {
+  const [images, setImages] = useState(IMAGES);
   const [cat, setCat] = useState('All');
   const [search, setSearch] = useState('');
   const [lightbox, setLightbox] = useState(null);
 
-  const filtered = useMemo(() => IMAGES.filter((i) => (cat === 'All' || i.cat === cat) && i.title.toLowerCase().includes(search.toLowerCase())), [cat, search]);
+  useEffect(() => {
+    fetch('/api/public/gallery')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.items && d.items.length > 0) {
+          setImages(d.items.map((i) => ({ url: i.url, cat: i.category, title: i.title })));
+        }
+      })
+      .catch((e) => console.error(e));
+  }, []);
+
+  const filtered = useMemo(() => images.filter((i) => (cat === 'All' || i.cat === cat) && i.title.toLowerCase().includes(search.toLowerCase())), [images, cat, search]);
 
   const nav = (delta) => {
     const idx = filtered.findIndex((i) => i.url === lightbox?.url);

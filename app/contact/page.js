@@ -55,10 +55,10 @@ export default function ContactPage() {
               className="lg:col-span-2 space-y-4"
             >
               {[
-                { icon: MapPin, label: 'Visit Us', value: 'Dharwad, Karnataka, India — 580001', color: '#8CC63F' },
-                { icon: Mail, label: 'Email Us', value: 'connect@dharwad.org', link: 'mailto:connect@dharwad.org', color: '#83B9E6' },
-                { icon: Phone, label: 'Call Us', value: '+91 98765 43210', link: 'tel:+919876543210', color: '#8CC63F' },
-                { icon: Clock, label: 'Working Hours', value: 'Mon–Sat, 9:00 AM – 6:30 PM', color: '#83B9E6' },
+                { icon: MapPin, label: 'Visit Us', value: '1st Floor, Above Basappa Khanavali, Near Court Circle, Dharwad - 580001', color: '#8CC63F' },
+                { icon: Mail, label: 'Email Us', value: 'girishangadi2008@gmail.com', link: 'mailto:girishangadi2008@gmail.com', color: '#83B9E6' },
+                { icon: Phone, label: 'Call Us', value: '+91 98455 13016', link: 'tel:+919845513016', color: '#8CC63F' },
+                { icon: Clock, label: 'Working Hours', value: 'Mon–Sat, 10:00 AM – 6:00 PM', color: '#83B9E6' },
               ].map((c) => (
                 <a
                   key={c.label}
@@ -78,7 +78,7 @@ export default function ContactPage() {
               ))}
 
               <a
-                href="https://wa.me/919876543210"
+                href="https://wa.me/919845513016"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl bg-[#25D366] hover:bg-[#128C7E] text-white font-semibold transition-colors"
@@ -86,9 +86,9 @@ export default function ContactPage() {
                 <MessageCircle className="w-5 h-5" /> Chat on WhatsApp
               </a>
 
-              <div className="rounded-2xl overflow-hidden border border-black/5 h-64">
+              <div className="rounded-2xl overflow-hidden border border-black/5 h-64 relative">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15380.79!2d75.008!3d15.458!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sDharwad!5e0!3m2!1sen!2sin!4v1700000000000"
+                  src="https://maps.google.com/maps?q=CONNECT%2C%20above%20Basappa%20Kanavali%2C%20opp.%20Civil%20Court%2C%20Madihal%2C%20Kamanakati%2C%20Hosayellapur%2C%20Hubballi%2C%20Karnataka%20580001&t=&z=17&ie=UTF8&iwloc=&output=embed"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}

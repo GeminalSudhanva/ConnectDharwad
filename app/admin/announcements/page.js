@@ -6,6 +6,7 @@ export default function AnnouncementsAdmin() {
       { key: 'title', label: 'Title', required: true },
       { key: 'date', label: 'Date', required: true, placeholder: 'Jun 30, 2025' },
       { key: 'description', label: 'Short Description', type: 'textarea' },
+      { key: 'imageUrl', label: 'Image', type: 'image' },
       { key: 'pinned', label: 'Pin to top', type: 'boolean' },
     ]} />;
 }
