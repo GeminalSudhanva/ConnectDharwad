@@ -7,7 +7,7 @@ import { motion, AnimatePresence, useInView, useMotionValue, useTransform, anima
 import {
   ArrowRight, Sparkles, GraduationCap, Briefcase, Lightbulb,
   Users, Target, Rocket, Award, HeartHandshake, Building2, Star, MapPin, Phone,
-  Linkedin, Quote, CheckCircle2, TrendingUp, Mail,
+  Linkedin, Quote, CheckCircle2, TrendingUp, Mail, X,
 } from 'lucide-react';
 import Navbar from '@/components/site/Navbar';
 import Footer from '@/components/site/Footer';
@@ -116,7 +116,7 @@ function Counter({ to, suffix = '', duration = 2 }) {
 
 function Hero() {
   return (
-    <section id="home" className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 overflow-hidden">
+    <section id="home" className="relative pt-36 pb-12 lg:pt-44 lg:pb-16 overflow-hidden">
       <div className="absolute inset-0 grid-pattern opacity-70" />
       <div className="absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full bg-[#8CC63F]/25 blur-3xl animate-blob" />
       <div className="absolute -bottom-40 -right-24 w-[560px] h-[560px] rounded-full bg-[#83B9E6]/30 blur-3xl animate-blob" style={{ animationDelay: '3s' }} />
@@ -248,7 +248,7 @@ function ClientsStrip() {
 
 function About() {
   return (
-    <section id="about" className="py-24 lg:py-32 relative">
+    <section id="about" className="py-12 lg:py-16 relative">
       <div className="container">
         <div className="grid lg:grid-cols-2 gap-14 items-center">
           <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '-100px' }} transition={{ duration: 0.6 }} className="relative">
@@ -302,7 +302,7 @@ function About() {
 
 function Services() {
   return (
-    <section id="services" className="py-24 lg:py-32 bg-[#F7F9FA] relative overflow-hidden">
+    <section id="services" className="py-12 lg:py-16 bg-[#F7F9FA] relative overflow-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full bg-[#8CC63F]/5 blur-3xl" />
       <div className="container relative">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center max-w-2xl mx-auto mb-16">
@@ -358,31 +358,25 @@ function Stats() {
   }, []);
 
   return (
-    <section className="py-20 lg:py-24 bg-[#231F20] relative overflow-hidden">
-      <div className="absolute inset-0 grid-pattern opacity-30" />
-      <div className="absolute -top-40 -right-20 w-[500px] h-[500px] rounded-full bg-[#8CC63F]/15 blur-3xl" />
-      <div className="absolute -bottom-40 -left-20 w-[500px] h-[500px] rounded-full bg-[#83B9E6]/10 blur-3xl" />
-
-      <div className="container relative">
-        <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 mb-4">
-            <span className="text-xs font-semibold tracking-wider text-[#8CC63F]">OUR IMPACT</span>
-          </div>
-          <h2 className="text-4xl lg:text-5xl font-display font-bold text-white text-balance">
-            Numbers that speak <span className="text-[#8CC63F]">volumes.</span>
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
-          {stats.map((s, i) => (
-            <motion.div key={s.label} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="glass-dark rounded-2xl p-6 lg:p-7 text-center border border-white/10 hover:border-[#8CC63F]/40 transition-all">
-              <div className="text-4xl lg:text-5xl font-display font-extrabold text-white">
-                <Counter to={s.value} suffix={s.suffix} />
+    <section className="py-6 bg-[#231F20] relative overflow-hidden border-y border-[#8CC63F]/20 select-none">
+      <div className="absolute inset-0 grid-pattern opacity-10" />
+      <div className="relative">
+        <div className="overflow-hidden relative w-full">
+          <div className="flex gap-20 animate-marquee whitespace-nowrap items-center">
+            {[...stats, ...stats, ...stats].map((s, i) => (
+              <div key={i} className="inline-flex items-center gap-4 text-white">
+                <span className="text-3xl lg:text-4xl font-display font-extrabold text-[#8CC63F]">
+                  <Counter to={s.value} suffix={s.suffix} />
+                </span>
+                <span className="text-sm lg:text-base text-white/80 font-medium tracking-wide uppercase">
+                  {s.label}
+                </span>
+                <span className="w-2.5 h-2.5 rounded-full bg-[#8CC63F]/50 mx-2" />
               </div>
-              <div className="mt-2 text-xs lg:text-sm text-white/60 font-medium">{s.label}</div>
-            </motion.div>
-          ))}
+            ))}
+          </div>
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#231F20] to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#231F20] to-transparent z-10" />
         </div>
       </div>
     </section>
@@ -391,7 +385,7 @@ function Stats() {
 
 function WhyUs() {
   return (
-    <section className="py-24 lg:py-32">
+    <section className="py-12 lg:py-16">
       <div className="container">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center max-w-2xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#83B9E6]/15 border border-[#83B9E6]/30 mb-4">
@@ -434,7 +428,7 @@ function Trainers() {
   const visibleTrainers = showAll ? trainers : trainers.slice(0, 4);
 
   return (
-    <section className="py-24 lg:py-32 bg-[#F7F9FA]">
+    <section className="py-12 lg:py-16 bg-[#F7F9FA]">
       <div className="container">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-14">
           <div className="max-w-xl">
@@ -544,6 +538,8 @@ function Events() {
 
 function Announcements() {
   const [announcements, setAnnouncements] = useState(ANNOUNCEMENTS);
+  const [activeAnnouncement, setActiveAnnouncement] = useState(null);
+
   useEffect(() => {
     fetch('/api/public/announcements')
       .then((r) => r.json())
@@ -554,13 +550,20 @@ function Announcements() {
   }, []);
 
   return (
-    <section className="py-16 lg:py-20 bg-[#F7F9FA]">
+    <section className="py-12 lg:py-16 bg-[#F7F9FA]">
       <div className="container">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#83B9E6]/30 mb-3">
-            <span className="text-xs font-semibold tracking-wider text-[#5C9CD3]">LATEST ANNOUNCEMENTS</span>
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#83B9E6]/30 mb-3">
+              <span className="text-xs font-semibold tracking-wider text-[#5C9CD3]">LATEST ANNOUNCEMENTS</span>
+            </div>
+            <h2 className="text-3xl lg:text-4xl font-display font-bold text-[#231F20]">What&apos;s happening at Connect Dharwad.</h2>
           </div>
-          <h2 className="text-3xl lg:text-4xl font-display font-bold text-[#231F20]">What&apos;s happening at Connect Dharwad.</h2>
+          <div className="flex shrink-0">
+            <Link href="/announcements" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-black/10 text-sm font-semibold text-[#231F20] hover:border-[#231F20] hover:-translate-y-0.5 transition-all">
+              View All <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-4">
@@ -578,15 +581,61 @@ function Announcements() {
                   <p className="mt-2 text-sm text-[#231F20]/65 line-clamp-3">{a.description || a.desc}</p>
                 </div>
                 <div className="mt-4">
-                  <Link href="/events" className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#231F20] hover:text-[#8CC63F]">
+                  <button
+                    onClick={() => setActiveAnnouncement(a)}
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#231F20] hover:text-[#8CC63F] transition-colors"
+                  >
                     Read More <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Announcement Modal Popup */}
+      <AnimatePresence>
+        {activeAnnouncement && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setActiveAnnouncement(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              className="bg-white rounded-3xl overflow-hidden max-w-2xl w-full shadow-2xl relative max-h-[90vh] flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setActiveAnnouncement(null)}
+                className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/45 hover:bg-black/60 text-white flex items-center justify-center transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {activeAnnouncement.imageUrl && (
+                <div className="relative aspect-[16/9] w-full bg-black/5 overflow-hidden shrink-0">
+                  <img src={activeAnnouncement.imageUrl} alt={activeAnnouncement.title} className="w-full h-full object-cover" />
+                </div>
+              )}
+
+              <div className="p-6 overflow-y-auto">
+                <span className="text-xs font-semibold text-[#8CC63F] bg-[#8CC63F]/10 px-2.5 py-1 rounded-full">{activeAnnouncement.date}</span>
+                <h3 className="mt-4 font-display text-2xl font-bold text-[#231F20]">{activeAnnouncement.title}</h3>
+                <p className="mt-4 text-sm text-[#231F20]/80 leading-relaxed whitespace-pre-line">
+                  {activeAnnouncement.description || activeAnnouncement.desc}
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
@@ -664,7 +713,7 @@ function Testimonials() {
   const initials = active.name.split(' ').map((n) => n[0]).join('').substring(0, 2).toUpperCase();
 
   return (
-    <section id="testimonials" className="py-24 lg:py-32 relative overflow-hidden">
+    <section id="testimonials" className="py-12 lg:py-16 relative overflow-hidden">
       <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-[#83B9E6]/15 blur-3xl" />
       <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full bg-[#8CC63F]/10 blur-3xl" />
       <div className="container relative">
@@ -724,7 +773,7 @@ function Testimonials() {
 
 function CTA() {
   return (
-    <section id="contact" className="py-24 lg:py-28">
+    <section id="contact" className="py-12 lg:py-16">
       <div className="container">
         <motion.div initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
           className="relative overflow-hidden rounded-[36px] bg-[#231F20] p-10 lg:p-16">
@@ -790,9 +839,7 @@ function App() {
       <Stats />
       <WhyUs />
       <Trainers />
-      <Events />
       <Announcements />
-      <GalleryPreview />
       <Testimonials />
       <CTA />
       <Footer />

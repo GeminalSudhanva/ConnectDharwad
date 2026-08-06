@@ -37,8 +37,7 @@ export default function Footer() {
               {[
                 { l: 'Home', h: '/' },
                 { l: 'About', h: '/about' },
-                { l: 'Events', h: '/events' },
-                { l: 'Gallery', h: '/gallery' },
+                { l: 'Announcements', h: '/announcements' },
                 { l: 'Testimonials', h: '/testimonials' },
                 { l: 'Contact', h: '/contact' },
               ].map((x) => (
@@ -55,7 +54,7 @@ export default function Footer() {
                 { l: 'Recruitment', h: '/services/recruitment' },
                 { l: 'Consultancy', h: '/services/consultancy' },
                 { l: 'Skill Development', h: '/services/corporate-training' },
-                { l: 'Workshops', h: '/events' },
+                { l: 'Workshops', h: '/services/corporate-training' },
                 { l: 'Industry Connect', h: '/services/consultancy' },
               ].map((x) => (
                 <li key={x.l}><Link href={x.h} className="hover:text-[#8CC63F] transition-colors">{x.l}</Link></li>
